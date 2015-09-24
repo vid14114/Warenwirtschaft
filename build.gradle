@@ -7,8 +7,8 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.h2database', name: 'h2', version: '1.4.187'
-    compile 'org.hibernate:hibernate-core:4.3.10.Final'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.189'
+    compile 'org.hibernate:hibernate-core:5.0.1.Final'
 }
 
 sourceSets {
