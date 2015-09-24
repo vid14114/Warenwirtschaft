@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TitledPane xmlns:fx="http://javafx.com/fxml/1" animated="false" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" text="Jahresvergleich"
+            xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.JahresvergleichController">
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <children>
+                <Label layoutX="14.0" layoutY="19.0" text="Kunde:"/>
+                <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="770.0">
+                    <columns>
+                        <TableColumn fx:id="pNrColumn" prefWidth="70.0" text="ProduktNr"/>
+                        <TableColumn fx:id="bezColumn" prefWidth="222.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="bildColumn" text="Bild"/>
+                        <TableColumn fx:id="s1Column" prefWidth="98.0" text="Stückzahl"/>
+                        <TableColumn fx:id="u1Column" prefWidth="99.0" text="Umsatz"/>
+                        <TableColumn fx:id="s2Column" minWidth="0.0" prefWidth="110.0" text="Stückzahl"/>
+                        <TableColumn fx:id="u2Column" prefWidth="75.0" text="Umsatz"/>
+                    </columns>
+                </TableView>
+                <ChoiceBox fx:id="kundenChoiceBox" layoutX="67.0" layoutY="15.0" prefHeight="25.0" prefWidth="214.0"/>
+                <Separator layoutX="391.0" layoutY="1.0" orientation="VERTICAL" prefHeight="52.0" prefWidth="5.0"/>
+                <Separator layoutX="588.0" layoutY="1.0" orientation="VERTICAL" prefHeight="52.0" prefWidth="5.0"/>
+                <Separator layoutX="782.0" layoutY="2.0" orientation="VERTICAL" prefHeight="52.0" prefWidth="5.0"/>
+                <Label fx:id="day1Label" layoutX="405.0" layoutY="20.0" text="Label"/>
+                <Label fx:id="day2Label" layoutX="601.0" layoutY="20.0" text="Label"/>
+                <ChoiceBox fx:id="year1ChoiceBox" layoutX="479.0" layoutY="16.0" prefHeight="25.0" prefWidth="100.0"/>
+                <ChoiceBox fx:id="year2ChoiceBox" layoutX="676.0" layoutY="16.0" prefHeight="25.0" prefWidth="100.0"/>
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>

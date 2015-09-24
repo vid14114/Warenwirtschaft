@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.h2database', name: 'h2', version: '1.4.187'
+    compile 'org.hibernate:hibernate-core:4.3.10.Final'
+}
+
+sourceSets {
+    main {
+        output.resourcesDir = "build/classes/main"
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'control.MainApp'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}

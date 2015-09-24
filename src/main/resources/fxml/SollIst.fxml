@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TitledPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" text="Soll/Ist-Vergleich"
+            xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.SollIstVergleichController">
+    <content>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <Label layoutX="177.0" layoutY="18.0" text="Von:"/>
+                <ChoiceBox fx:id="vonChoiceBox" layoutX="213.0" layoutY="14.0" prefWidth="150.0"/>
+                <Label layoutX="444.0" layoutY="18.0" text="Bis:"/>
+                <ChoiceBox fx:id="bisChoiceBox" layoutX="472.0" layoutY="14.0" prefWidth="150.0"/>
+                <TableView fx:id="invInfoTable" layoutX="21.0" layoutY="45.0" prefHeight="500.0" prefWidth="757.0">
+                    <columns>
+                        <TableColumn fx:id="produktNrColumn" prefWidth="100.0" text="ProduktNr"/>
+                        <TableColumn fx:id="bezeichnungColumn" prefWidth="200.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="bildColumn" text="Bild"/>
+                        <TableColumn fx:id="sollColumn" prefWidth="100.0" text="Soll-Stand"/>
+                        <TableColumn fx:id="istColumn" prefWidth="100.0" text="Ist-Stand"/>
+                        <TableColumn fx:id="letzteInvColumn" prefWidth="90.0" text="Letzte Inventur"/>
+                        <TableColumn fx:id="statusColumn" prefWidth="70.0" text="Status"/>
+                    </columns>
+                </TableView>
+                <Button layoutX="706.0" layoutY="14.0" mnemonicParsing="false" onAction="#calculate" text="Berechnen"/>
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>
