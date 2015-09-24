@@ -4,3 +4,8 @@ jdk:
 
 before_install:
   - chmod +x gradlew
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
