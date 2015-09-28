@@ -70,7 +70,6 @@ public class SollIstVergleichController {
         vonChoiceBox.setItems(datums);
         vonChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> setBisChoice(newValue));
         vonChoiceBox.setValue(datums.get(0));
-
     }
 
     private void setBisChoice(String vonDatum) {

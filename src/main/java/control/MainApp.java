@@ -10,10 +10,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Auftrag;
-import model.Inventur;
-import model.Produkt;
-import model.Produktmenge;
+import model.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,7 +30,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Wawi");
+        this.primaryStage.setTitle("Zentrallager");
         primaryStage.setOnCloseRequest(event -> {
             Platform.exit();
             System.exit(0);
@@ -258,6 +255,28 @@ public class MainApp extends Application {
             dialogStage.setScene(scene);
             NewLieferantController controller = loader.getController();
             controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+            return controller.isAddClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showLieferantDetails(Lieferant l) {
+        FXMLLoader loader = new FXMLLoader();
+        URL path = getClass().getResource("/fxml/NewLieferant.fxml");
+        loader.setLocation(path);
+        try {
+            TitledPane dialog = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(dialog);
+            dialogStage.setScene(scene);
+            NewLieferantController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.populateData(l);
             dialogStage.showAndWait();
             return controller.isAddClicked();
         } catch (IOException e) {

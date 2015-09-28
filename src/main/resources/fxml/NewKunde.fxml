@@ -4,15 +4,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <TitledPane xmlns:fx="http://javafx.com/fxml/1" fx:id="dialog" maxHeight="-Infinity" maxWidth="-Infinity"
             minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" text="Neuer Kunde"
-            xmlns="http://javafx.com/javafx/8" fx:controller="control.fxml.NewKundeController">
+            minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" text="Neuer Shop"
+            xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.NewKundeController">
     <AnchorPane prefHeight="200.0" prefWidth="200.0">
         <Label layoutX="14.0" layoutY="25.0" text="Name:"/>
         <TextField fx:id="nameField" layoutX="49.0" layoutY="21.0" prefHeight="25.0" prefWidth="374.0"
                    promptText="Name eingeben"/>
-        <Button layoutX="100.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleAdd"
-                text="Kunde erstellen"/>
-        <Button layoutX="260.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleCancel"
-                text="Abbrechen"/>
+        <Button layoutX="100.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleAdd" text="Shop erstellen"/>
+        <Button layoutX="260.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleCancel" text="Abbrechen"/>
     </AnchorPane>
 </TitledPane>

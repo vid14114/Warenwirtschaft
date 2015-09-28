@@ -31,7 +31,7 @@ public class NewKundeController extends BasicNewController {
         List<Kunde> kunden = KundeSession.getAllKunden();
         for (Kunde k : kunden)
             if (k.getName().equals(text)) {
-                showError("Kunde mit diesem Namen existiert bereits");
+                showError("Shop mit diesem Namen existiert bereits");
                 return false;
             }
         return true;

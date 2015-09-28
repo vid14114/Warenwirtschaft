@@ -69,6 +69,9 @@ public class KundenOverviewController {
     private TableView<Lieferant> lieferantenTable;
     @FXML
     private TableColumn<Lieferant, String> lNameColumn;
+    @FXML
+    private TableColumn<Lieferant, Number> lieferzeitColumn;
+
     private MainApp mainApp;
 
     @FXML
@@ -193,6 +196,7 @@ public class KundenOverviewController {
         });
 
         lNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        lieferzeitColumn.setCellValueFactory(cellData -> cellData.getValue().getLieferzeitProperty());
     }
 
     public void setMainApp(MainApp mainApp) {
@@ -243,7 +247,7 @@ public class KundenOverviewController {
             Alert alert = new Alert(AlertType.ERROR);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("Umsatz != 0");
-            alert.setContentText("Kunde hat bereits Umsatz und kann nicht mehr entfernt werden");
+            alert.setContentText("Shop hat bereits Umsatz gemacht und kann nicht mehr entfernt werden");
             alert.showAndWait();
         }
     }
@@ -372,6 +376,15 @@ public class KundenOverviewController {
         Lieferant rem = lieferantenTable.getItems().get(selectedIndex);
         LieferantSession.removeLieferant(rem);
         lieferantenTable.getItems().remove(selectedIndex);
+    }
+
+    @FXML
+    private void handleLieferantDetails() {
+        int selectedIndex = lieferantenTable.getSelectionModel().getSelectedIndex();
+        Lieferant l = lieferantenTable.getItems().get(selectedIndex);
+        boolean refresh = mainApp.showLieferantDetails(l);
+        if (refresh)
+            handleRefresh();
     }
 
     @FXML

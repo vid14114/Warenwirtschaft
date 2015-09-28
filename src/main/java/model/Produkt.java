@@ -121,7 +121,7 @@ public class Produkt {
         setUmsatz(umsatz);
     }
 
-    @Column(name = "bigimage", length = 200000)
+    @Column(name = "bigimage", length = 2000000)
     public byte[] getImage() {
         return image;
     }
