@@ -8,7 +8,7 @@
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <children>
-                <Label layoutX="14.0" layoutY="19.0" text="Kunde:"/>
+                <Label layoutX="14.0" layoutY="19.0" text="Shop:"/>
                 <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="770.0">
                     <columns>
                         <TableColumn fx:id="pNrColumn" prefWidth="70.0" text="ProduktNr"/>
