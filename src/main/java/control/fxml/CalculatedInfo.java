@@ -16,6 +16,8 @@ public class CalculatedInfo {
     //Bestellempfehlung
     StringProperty lagerstand = new SimpleStringProperty("");
     StringProperty gebrauchteMenge = new SimpleStringProperty("");
+    StringProperty bestellen = new SimpleStringProperty("");
+    int lieferzeit;
 
     //Soll-Ist-Vergleich
     IntegerProperty sollStand = new SimpleIntegerProperty();

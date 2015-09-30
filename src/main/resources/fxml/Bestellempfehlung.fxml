@@ -3,28 +3,27 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <TitledPane xmlns:fx="http://javafx.com/fxml/1" animated="false" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" text="Bestellempfehlungen"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="910.0" text="Bestellempfehlungen"
             xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.BestellempfehlungController">
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <children>
-                <Label layoutX="14.0" layoutY="14.0" text="Jahre:"/>
-                <Slider fx:id="jahre" blockIncrement="1.0" layoutX="55.0" layoutY="12.0" majorTickUnit="1.0" max="10.0"
-                        min="1.0" minorTickCount="0" prefHeight="38.0" prefWidth="430.0" showTickLabels="true"
-                        showTickMarks="true" snapToTicks="true" value="1.0"/>
-                <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="770.0">
+                <Label layoutX="14.0" layoutY="14.0" text="Wochen:"/>
+                <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="880.0">
                     <columns>
-                        <TableColumn fx:id="pNrColumn" prefWidth="100.0" text="ProduktNr"/>
-                        <TableColumn fx:id="bezColumn" prefWidth="272.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="pNrColumn" prefWidth="72.0" text="ProduktNr"/>
+                        <TableColumn fx:id="bezColumn" prefWidth="271.0" text="Bezeichnung"/>
                         <TableColumn fx:id="bildColumn" text="Bild"/>
                         <TableColumn fx:id="lagerstandColumn" prefWidth="98.0" text="Lagerstand"/>
                         <TableColumn fx:id="daysToEmptyColumn" prefWidth="99.0" text="Tage bis leer"/>
                         <TableColumn fx:id="mengeColumn" minWidth="0.0" prefWidth="110.0" text="Benötigte Menge"/>
+                        <TableColumn fx:id="bestellenColumn" prefWidth="136.0" text="Spätestens bestellen"/>
                     </columns>
                 </TableView>
-                <Label layoutX="517.0" layoutY="14.0" text="Lieferant:"/>
-                <ChoiceBox fx:id="lieferantChoiceBox" layoutX="572.0" layoutY="10.0" prefHeight="25.0"
+                <Label layoutX="625.0" layoutY="14.0" text="Lieferant:"/>
+                <ChoiceBox fx:id="lieferantChoiceBox" layoutX="680.0" layoutY="10.0" prefHeight="25.0"
                            prefWidth="214.0"/>
+                <TextField fx:id="wochen" layoutX="61.0" layoutY="10.0"/>
             </children>
         </AnchorPane>
     </content>

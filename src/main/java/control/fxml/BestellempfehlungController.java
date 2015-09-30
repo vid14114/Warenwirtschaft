@@ -7,14 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.util.Callback;
 import model.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -24,12 +25,13 @@ import java.util.*;
 public class BestellempfehlungController {
     private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
     private final Callback imageCellFactory = new ImageCellFactory();
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
     private List<CalculatedInfo> dataAll;
     private List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
 
     @FXML
-    private Slider jahre;
+    private TextField wochen;
     @FXML
     private ChoiceBox<String> lieferantChoiceBox;
     @FXML
@@ -46,6 +48,8 @@ public class BestellempfehlungController {
     private TableColumn<CalculatedInfo, String> daysToEmptyColumn;
     @FXML
     private TableColumn<CalculatedInfo, String> mengeColumn;
+    @FXML
+    private TableColumn<CalculatedInfo, String> bestellenColumn;
 
     @FXML
     private void initialize() {
@@ -54,14 +58,19 @@ public class BestellempfehlungController {
         lieferanten.stream().forEach(l -> lieferantenChoice.add(l.getName()));
         lieferantChoiceBox.setItems(lieferantenChoice);
         lieferantChoiceBox.setValue("Alle");
+        wochen.setText("" + 1);
         calculateProduktinfos();
 
-        jahre.valueProperty().addListener((observable, oldValue, newValue) -> {
-            recalculate(newValue.intValue());
+        wochen.textProperty().addListener((observable1, oldValue, newValue) -> {
+            try {
+                int w = Integer.valueOf(newValue);
+                recalculate(w);
+            } catch (NumberFormatException e) {
+            }
         });
 
         lieferantChoiceBox.valueProperty().addListener((observable -> {
-            recalculate((int) jahre.getValue());
+            recalculate(Integer.valueOf(wochen.getText()));
         }));
 
         dataAll = FXCollections.observableArrayList(produktInfos.values());
@@ -73,9 +82,10 @@ public class BestellempfehlungController {
         lagerstandColumn.setCellValueFactory(cellData -> cellData.getValue().lagerstand);
         daysToEmptyColumn.setCellValueFactory(cellData -> cellData.getValue().tageBisLeer);
         mengeColumn.setCellValueFactory(cellData -> cellData.getValue().gebrauchteMenge);
+        bestellenColumn.setCellValueFactory(cellData -> cellData.getValue().bestellen);
         pInfoTable.setItems(dataShow);
 
-        recalculate((int) jahre.getValue());
+        recalculate(Integer.valueOf(wochen.getText()));
     }
 
     public void calculateProduktinfos() {
@@ -134,6 +144,25 @@ public class BestellempfehlungController {
         }
 
         toRemove.stream().forEach(ci -> produktInfos.values().remove(ci));
+
+        Collection<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
+        for (Lieferant l : lieferanten) {
+            l.getProdukte().stream().filter(p -> produktInfos.containsKey(p.getProduktNr())).forEach(p -> produktInfos.get(p.getProduktNr()).lieferzeit = l.getLieferzeit());
+            for (Produkt p : l.getProdukte()) {
+                int key = p.getProduktNr();
+                if (produktInfos.containsKey(key)) {
+                    CalculatedInfo ci = produktInfos.get(key);
+                    ci.lieferzeit = l.getLieferzeit();
+                    LocalDate now = LocalDate.now();
+                    LocalDate bestellen = now.plusDays(Integer.valueOf(ci.tageBisLeer.get()) - ci.lieferzeit);
+                    if (bestellen.isBefore(now) || bestellen.isEqual(now))
+                        ci.bestellen.set("SOFORT!");
+                    else
+                        ci.bestellen.set(bestellen.format(dtf));
+                }
+            }
+
+        }
     }
 
     public void recalculate(int y) {
@@ -148,7 +177,7 @@ public class BestellempfehlungController {
             dataAll.stream().filter(ci -> produktNummern.contains(ci.produktNr.get())).forEach(dataShow::add);
         }
         for (CalculatedInfo ci : dataShow) {
-            long menge = Math.round(ci.dailyNeed * y * 365 - (ci.inLastInvetur - ci.soldAfterLastInventur));
+            long menge = Math.round(ci.dailyNeed * y * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
             ci.gebrauchteMenge.set("" + Math.max(menge, 0));
         }
         FXCollections.sort(dataShow, (o1, o2) -> {
