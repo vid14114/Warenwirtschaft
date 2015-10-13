@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <TitledPane xmlns:fx="http://javafx.com/fxml/1" animated="false" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="450" text="Neues Produkt"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="450" text="Produkt"
             xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.NewProduktController">
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="226.0" prefWidth="448.0">

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <TitledPane xmlns:fx="http://javafx.com/fxml/1" fx:id="dialog" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" text="Neuer Lieferant"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" text="Lieferant"
             xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.NewLieferantController">
     <AnchorPane prefHeight="200.0" prefWidth="200.0">
         <Label layoutX="14.0" layoutY="25.0" text="Name:"/>
@@ -13,7 +13,7 @@
         <TextField fx:id="lieferzeitField" layoutX="73.0" layoutY="53.0" prefHeight="25.0" prefWidth="76.0"/>
         <Label layoutX="149.0" layoutY="57.0" text="Tage"/>
         <Button layoutX="100.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleAdd"
-                text="Lieferant erstellen"/>
+                text="Lieferant speichern"/>
         <Button layoutX="260.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleCancel" text="Abbrechen"/>
     </AnchorPane>
 </TitledPane>

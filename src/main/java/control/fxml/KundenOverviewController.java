@@ -66,11 +66,13 @@ public class KundenOverviewController {
     private TableColumn<Inventur, LocalDate> invDateColumn;
 
     @FXML
-    private TableView<Lieferant> lieferantenTable;
-    @FXML
     private TableColumn<Lieferant, String> lNameColumn;
     @FXML
     private TableColumn<Lieferant, Number> lieferzeitColumn;
+
+    @FXML
+    private TableView<Lieferant> lieferantenTable;
+
 
     private MainApp mainApp;
 
@@ -86,12 +88,12 @@ public class KundenOverviewController {
             public TableCell<Auftrag, LocalDate> call(TableColumn<Auftrag, LocalDate> col) {
                 final TableCell<Auftrag, LocalDate> cell = new TableCell<Auftrag, LocalDate>() {
                     @Override
-                    public void updateItem(LocalDate firstName, boolean empty) {
-                        super.updateItem(firstName, empty);
+                    public void updateItem(LocalDate datum, boolean empty) {
+                        super.updateItem(datum, empty);
                         if (empty) {
                             setText(null);
                         } else {
-                            setText(firstName.format(dtf));
+                            setText(datum.format(dtf));
                         }
                     }
                 };
@@ -109,12 +111,12 @@ public class KundenOverviewController {
             public TableCell<Auftrag, String> call(TableColumn<Auftrag, String> col) {
                 final TableCell<Auftrag, String> cell = new TableCell<Auftrag, String>() {
                     @Override
-                    public void updateItem(String firstName, boolean empty) {
-                        super.updateItem(firstName, empty);
+                    public void updateItem(String kunde, boolean empty) {
+                        super.updateItem(kunde, empty);
                         if (empty) {
                             setText(null);
                         } else {
-                            setText(firstName);
+                            setText(kunde);
                         }
                     }
                 };
@@ -132,12 +134,12 @@ public class KundenOverviewController {
             public TableCell<Auftrag, Number> call(TableColumn<Auftrag, Number> col) {
                 final TableCell<Auftrag, Number> cell = new TableCell<Auftrag, Number>() {
                     @Override
-                    public void updateItem(Number firstName, boolean empty) {
-                        super.updateItem(firstName, empty);
+                    public void updateItem(Number wert, boolean empty) {
+                        super.updateItem(wert, empty);
                         if (empty) {
                             setText(null);
                         } else {
-                            setText(firstName.toString());
+                            setText(wert.toString());
                         }
                     }
                 };
@@ -177,12 +179,12 @@ public class KundenOverviewController {
             public TableCell<Inventur, LocalDate> call(TableColumn<Inventur, LocalDate> col) {
                 final TableCell<Inventur, LocalDate> cell = new TableCell<Inventur, LocalDate>() {
                     @Override
-                    public void updateItem(LocalDate firstName, boolean empty) {
-                        super.updateItem(firstName, empty);
+                    public void updateItem(LocalDate invDate, boolean empty) {
+                        super.updateItem(invDate, empty);
                         if (empty) {
                             setText(null);
                         } else {
-                            setText(firstName.format(dtf));
+                            setText(invDate.format(dtf));
                         }
                     }
                 };
@@ -196,7 +198,35 @@ public class KundenOverviewController {
         });
 
         lNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        lNameColumn.setCellFactory(param -> {
+            final TableCell<Lieferant, String> cell = new TableCell<Lieferant, String>() {
+                @Override
+                public void updateItem(String name, boolean empty) {
+                    if (!empty)
+                        setText(name);
+                }
+            };
+            cell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1)
+                    handleLieferantDetails();
+            });
+            return cell;
+        });
         lieferzeitColumn.setCellValueFactory(cellData -> cellData.getValue().getLieferzeitProperty());
+        lieferzeitColumn.setCellFactory(param -> {
+            final TableCell<Lieferant, Number> cell = new TableCell<Lieferant, Number>() {
+                @Override
+                public void updateItem(Number lieferzeit, boolean empty) {
+                    if (!empty)
+                        setText(lieferzeit.toString());
+                }
+            };
+            cell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (event.getClickCount() > 1)
+                    handleLieferantDetails();
+            });
+            return cell;
+        });
     }
 
     public void setMainApp(MainApp mainApp) {
