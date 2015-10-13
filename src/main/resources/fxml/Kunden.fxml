@@ -129,5 +129,20 @@
                 </AnchorPane>
             </content>
         </Tab>
+        <Tab text="Zulieferungen">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <TableView fx:id="zulieferungenTable" prefHeight="511.0" prefWidth="800.0">
+                            <columns>
+                                <TableColumn fx:id="zuDatumColumn" prefWidth="186.0" text="Datum"/>
+                                <TableColumn fx:id="zuLieferantColumn" minWidth="0.0" prefWidth="605.0"
+                                             text="Lieferant"/>
+                            </columns>
+                        </TableView>
+                    </children>
+                </AnchorPane>
+            </content>
+        </Tab>
     </TabPane>
 </AnchorPane>

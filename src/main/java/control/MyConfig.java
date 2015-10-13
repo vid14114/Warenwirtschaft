@@ -35,7 +35,8 @@ public enum MyConfig {
                     .addAnnotatedClass(Produkt.class)
                     .addAnnotatedClass(Produktmenge.class)
                     .addAnnotatedClass(Inventur.class)
-                    .addAnnotatedClass(Lieferant.class);
+                    .addAnnotatedClass(Lieferant.class)
+                    .addAnnotatedClass(Zulieferung.class);
             if (url != null)
                 configuration.setProperty("hibernate.connection.url", "jdbc:h2:file:" + url);
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();

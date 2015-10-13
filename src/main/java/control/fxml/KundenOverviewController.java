@@ -66,13 +66,18 @@ public class KundenOverviewController {
     private TableColumn<Inventur, LocalDate> invDateColumn;
 
     @FXML
+    private TableView<Lieferant> lieferantenTable;
+    @FXML
     private TableColumn<Lieferant, String> lNameColumn;
     @FXML
     private TableColumn<Lieferant, Number> lieferzeitColumn;
 
     @FXML
-    private TableView<Lieferant> lieferantenTable;
-
+    private TableView<Zulieferung> zulieferungenTable;
+    @FXML
+    private TableColumn<Zulieferung, LocalDate> zuDatumColumn;
+    @FXML
+    private TableColumn<Zulieferung, String> zuLieferantColumn;
 
     private MainApp mainApp;
 
@@ -227,6 +232,9 @@ public class KundenOverviewController {
             });
             return cell;
         });
+
+        zuDatumColumn.setCellValueFactory(cellData -> cellData.getValue().getDatumProperty());
+        zuLieferantColumn.setCellValueFactory(cellData -> cellData.getValue().getLieferant().getNameProperty());
     }
 
     public void setMainApp(MainApp mainApp) {
@@ -364,6 +372,7 @@ public class KundenOverviewController {
         produkteTable.setItems(FXCollections.observableArrayList(ProduktSession.getAllProdukte()));
         inventurTable.setItems(FXCollections.observableArrayList(InventurSession.getAllInventuren()));
         lieferantenTable.setItems(FXCollections.observableArrayList(LieferantSession.getAllLieferanten()));
+        zulieferungenTable.setItems(FXCollections.observableArrayList(ZulieferungSession.getAllZulieferungen()));
     }
 
     @FXML
