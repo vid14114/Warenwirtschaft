@@ -76,8 +76,6 @@ public class KundenOverviewController {
     private TableView<Zulieferung> zulieferungenTable;
     @FXML
     private TableColumn<Zulieferung, LocalDate> zuDatumColumn;
-    @FXML
-    private TableColumn<Zulieferung, String> zuLieferantColumn;
 
     private MainApp mainApp;
 
@@ -234,7 +232,28 @@ public class KundenOverviewController {
         });
 
         zuDatumColumn.setCellValueFactory(cellData -> cellData.getValue().getDatumProperty());
-        zuLieferantColumn.setCellValueFactory(cellData -> cellData.getValue().getLieferant().getNameProperty());
+        zuDatumColumn.setCellFactory(new Callback<TableColumn<Zulieferung, LocalDate>, TableCell<Zulieferung, LocalDate>>() {
+            @Override
+            public TableCell<Zulieferung, LocalDate> call(TableColumn<Zulieferung, LocalDate> col) {
+                final TableCell<Zulieferung, LocalDate> cell = new TableCell<Zulieferung, LocalDate>() {
+                    @Override
+                    public void updateItem(LocalDate zuDate, boolean empty) {
+                        super.updateItem(zuDate, empty);
+                        if (empty) {
+                            setText(null);
+                        } else {
+                            setText(zuDate.format(dtf));
+                        }
+                    }
+                };
+                cell.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    if (event.getClickCount() > 1) {
+                        handleZulieferungDetails();
+                    }
+                });
+                return cell;
+            }
+        });
     }
 
     public void setMainApp(MainApp mainApp) {
@@ -422,6 +441,30 @@ public class KundenOverviewController {
         int selectedIndex = lieferantenTable.getSelectionModel().getSelectedIndex();
         Lieferant l = lieferantenTable.getItems().get(selectedIndex);
         boolean refresh = mainApp.showLieferantDetails(l);
+        if (refresh)
+            handleRefresh();
+    }
+
+    @FXML
+    private void handleNewZulieferung() {
+        boolean refresh = mainApp.showNewZulieferungDialog();
+        if (refresh)
+            handleRefresh();
+    }
+
+    @FXML
+    private void handleDeleteZulieferung() {
+        int selectedIndex = zulieferungenTable.getSelectionModel().getSelectedIndex();
+        Zulieferung z = zulieferungenTable.getItems().get(selectedIndex);
+        ZulieferungSession.removeZulieferung(z);
+        lieferantenTable.getItems().remove(selectedIndex);
+    }
+
+    @FXML
+    private void handleZulieferungDetails() {
+        int selectedIndex = zulieferungenTable.getSelectionModel().getSelectedIndex();
+        Zulieferung z = zulieferungenTable.getItems().get(selectedIndex);
+        boolean refresh = mainApp.showZulieferungDetails(z.getProdukte(), z);
         if (refresh)
             handleRefresh();
     }

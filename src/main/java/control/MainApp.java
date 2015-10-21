@@ -263,6 +263,28 @@ public class MainApp extends Application {
         }
     }
 
+    public boolean showZulieferungDetails(Iterable<Produktmenge> lp, Zulieferung z) {
+        FXMLLoader loader = new FXMLLoader();
+        URL path = getClass().getResource("/fxml/Zulieferung.fxml");
+        loader.setLocation(path);
+        try {
+            TitledPane dialog = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(dialog);
+            dialogStage.setScene(scene);
+            ZulieferungDetailsController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.populateData(lp, z);
+            dialogStage.showAndWait();
+            return controller.isSaveClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean showLieferantDetails(Lieferant l) {
         FXMLLoader loader = new FXMLLoader();
         URL path = getClass().getResource("/fxml/NewLieferant.fxml");
@@ -279,6 +301,27 @@ public class MainApp extends Application {
             controller.populateData(l);
             dialogStage.showAndWait();
             return controller.isAddClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showNewZulieferungDialog() {
+        FXMLLoader loader = new FXMLLoader();
+        URL path = getClass().getResource("/fxml/Zulieferung.fxml");
+        loader.setLocation(path);
+        try {
+            TitledPane dialog = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(dialog);
+            dialogStage.setScene(scene);
+            ZulieferungDetailsController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+            return controller.isSaveClicked();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

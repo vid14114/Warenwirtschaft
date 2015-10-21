@@ -2,6 +2,7 @@ package control.fxml;
 
 import control.AuftragSession;
 import control.InventurSession;
+import control.ZulieferungSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.util.Callback;
 import model.Auftrag;
 import model.Inventur;
 import model.Produktmenge;
+import model.Zulieferung;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -90,9 +92,11 @@ public class SollIstVergleichController {
         auftraege.stream().filter(a -> a.getErstellung().isAfter(von) && a.getErstellung().isBefore(bis)).forEach(auftraegeInZeitraum::add);
         List<Inventur> inventurenInZeitraum = new ArrayList<>();
         inventuren.stream().filter(i -> i.getDatum().isEqual(von) || i.getDatum().isEqual(bis) || (i.getDatum().isAfter(von) && i.getDatum().isBefore(bis))).forEach(inventurenInZeitraum::add);
+        List<Zulieferung> zulieferungen = ZulieferungSession.getAllZulieferungen();
+        List<Zulieferung> zulieferungenInZeitraum = new ArrayList<>();
+        zulieferungen.stream().filter(z -> z.getErstellung().isAfter(von) && z.getErstellung().isBefore(bis)).forEach(zulieferungenInZeitraum::add);
 
         inventurenInZeitraum.sort((o1, o2) -> o2.getDatum().compareTo(o1.getDatum()));
-
         for (Inventur i : inventurenInZeitraum) {
             for (Produktmenge p : i.getProdukte()) {
                 int key = p.getProdukt().getProduktNr();
@@ -100,6 +104,7 @@ public class SollIstVergleichController {
                     CalculatedInfo ci = new CalculatedInfo(key);
                     ci.bezeichnung.set(p.getProdukt().getKateogrie().name() + ": " + p.getProdukt().getBez());
                     ci.bild = p.getProdukt().getImageProperty();
+                    ci.sollStand.set(p.getMenge());
                     produktInfos.put(key, ci);
                 }
                 CalculatedInfo ci = produktInfos.get(key);
@@ -123,25 +128,30 @@ public class SollIstVergleichController {
                 int key = p.getProdukt().getProduktNr();
                 if (produktInfos.containsKey(key)) {
                     CalculatedInfo ci = produktInfos.get(key);
-                    if (a.getErstellung().isAfter(ci.preLastInventur)) {
-                        ci.soldAfterLastInventur += p.getMenge();
-                    }
+                    ci.sollStand.set(ci.sollStand.get() - p.getMenge());
+                }
+            }
+        }
+
+        for (Zulieferung z : zulieferungenInZeitraum) {
+            for (Produktmenge p : z.getProdukte()) {
+                int key = p.getProdukt().getProduktNr();
+                if (produktInfos.containsKey(key)) {
+                    CalculatedInfo ci = produktInfos.get(key);
+                    ci.sollStand.set(ci.sollStand.get() + p.getMenge());
                 }
             }
         }
 
         data.clear();
         for (CalculatedInfo ci : produktInfos.values()) {
-            int soll = ci.inPreLastInventur - ci.soldAfterLastInventur;
-            ci.sollStand.set(soll);
             ci.istStand.set(ci.inLastInvetur);
             ci.lastInvProp.set(ci.lastInventur.format(dtf));
-            if (soll == ci.inLastInvetur)
+            if (ci.sollStand.get() == ci.inLastInvetur)
                 ci.status.set("OK");
-            else
+            else if (ci.inLastInvetur < ci.sollStand.get())
                 ci.status.set("Schwund");
-            if (soll > ci.inLastInvetur || soll == ci.inLastInvetur)
-                data.add(ci);
+            data.add(ci);
         }
     }
 }

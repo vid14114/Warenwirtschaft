@@ -135,11 +135,15 @@
                     <children>
                         <TableView fx:id="zulieferungenTable" prefHeight="511.0" prefWidth="800.0">
                             <columns>
-                                <TableColumn fx:id="zuDatumColumn" prefWidth="186.0" text="Datum"/>
-                                <TableColumn fx:id="zuLieferantColumn" minWidth="0.0" prefWidth="605.0"
-                                             text="Lieferant"/>
+                                <TableColumn fx:id="zuDatumColumn" prefWidth="789.0" text="Datum"/>
                             </columns>
                         </TableView>
+                        <Button layoutX="14.0" layoutY="532.0" mnemonicParsing="false" onAction="#handleNewZulieferung"
+                                text="Neu"/>
+                        <Button layoutX="114.0" layoutY="532.0" mnemonicParsing="false"
+                                onAction="#handleDeleteZulieferung" text="Entfernen"/>
+                        <Button layoutX="734.0" layoutY="532.0" mnemonicParsing="false"
+                                onAction="#handleZulieferungDetails" text="Details"/>
                     </children>
                 </AnchorPane>
             </content>

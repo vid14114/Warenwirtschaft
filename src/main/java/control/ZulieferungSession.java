@@ -2,6 +2,7 @@ package control;
 
 import model.Zulieferung;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -15,5 +16,21 @@ public class ZulieferungSession {
         List<Zulieferung> result = session.createQuery("from Zulieferung").list();
         session.close();
         return result;
+    }
+
+    public static void saveZulieferung(Zulieferung z) {
+        Session session = MyConfig.getSessionFactory().openSession();
+        Transaction t = session.beginTransaction();
+        session.saveOrUpdate(z);
+        t.commit();
+        session.close();
+    }
+
+    public static void removeZulieferung(Zulieferung z) {
+        Session session = MyConfig.getSessionFactory().openSession();
+        Transaction t = session.beginTransaction();
+        session.delete(z);
+        t.commit();
+        session.close();
     }
 }

@@ -20,7 +20,6 @@ public class Zulieferung {
     private IntegerProperty zuNr;
     private ObjectProperty<LocalDate> datum;
     private ObservableList<Produktmenge> produkte;
-    private Lieferant lieferant;
 
     @Id
     @GeneratedValue
@@ -58,14 +57,5 @@ public class Zulieferung {
 
     public void setProdukte(Collection<Produktmenge> produkte) {
         this.produkte = FXCollections.observableArrayList(produkte);
-    }
-
-    @ManyToOne
-    public Lieferant getLieferant() {
-        return lieferant;
-    }
-
-    public void setLieferant(Lieferant lieferant) {
-        this.lieferant = lieferant;
     }
 }
