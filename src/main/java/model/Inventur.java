@@ -28,7 +28,7 @@ public class Inventur {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         if (id == null)
             return 0;

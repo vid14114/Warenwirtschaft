@@ -25,7 +25,7 @@ public class Auftrag {
     private StringProperty kundeName;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getAuftrNr() {
         if (auftrNr == null)
             return 0;

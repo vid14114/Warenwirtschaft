@@ -18,7 +18,7 @@ public class Kunde {
     private DoubleProperty umsatz;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getKdNr() {
         if (kdNr == null)
             return 0;
