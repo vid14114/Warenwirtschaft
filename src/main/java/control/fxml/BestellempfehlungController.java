@@ -6,10 +6,7 @@ import control.LieferantSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.util.Callback;
 import model.*;
@@ -23,15 +20,18 @@ import java.util.*;
  * Created by Viktor on 11.06.2015.
  */
 public class BestellempfehlungController {
-    private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
     private final Callback imageCellFactory = new ImageCellFactory();
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
     private ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
     private List<CalculatedInfo> dataAll;
     private List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
+    private int wochenI;
 
     @FXML
     private TextField wochen;
+    @FXML
+    private TextField vorlaufzeit;
     @FXML
     private ChoiceBox<String> lieferantChoiceBox;
     @FXML
@@ -50,6 +50,8 @@ public class BestellempfehlungController {
     private TableColumn<CalculatedInfo, String> mengeColumn;
     @FXML
     private TableColumn<CalculatedInfo, String> bestellenColumn;
+    @FXML
+    private CheckBox neueBerechnung;
 
     @FXML
     private void initialize() {
@@ -59,19 +61,36 @@ public class BestellempfehlungController {
         lieferantChoiceBox.setItems(lieferantenChoice);
         lieferantChoiceBox.setValue("Alle");
         wochen.setText("" + 1);
-        calculateProduktinfos();
+        vorlaufzeit.setText("" + 0);
+        calculateProduktinfos(0);
 
         wochen.textProperty().addListener((observable1, oldValue, newValue) -> {
             try {
                 int w = Integer.valueOf(newValue);
-                recalculate(w);
+                wochenI = w;
+                recalculate(w, neueBerechnung.isSelected());
             } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         });
 
-        lieferantChoiceBox.valueProperty().addListener((observable -> {
-            recalculate(Integer.valueOf(wochen.getText()));
+        vorlaufzeit.textProperty().addListener(((observable1, oldValue, newValue) -> {
+            try {
+                int v = Integer.valueOf(newValue);
+                calculateProduktinfos(v);
+                recalculate(wochenI, neueBerechnung.isSelected());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }));
+
+        lieferantChoiceBox.valueProperty().addListener((observable -> {
+            recalculate(Integer.valueOf(wochen.getText()), neueBerechnung.isSelected());
+        }));
+
+        neueBerechnung.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            recalculate(Integer.valueOf(wochen.getText()), newValue);
+        });
 
         dataAll = FXCollections.observableArrayList(produktInfos.values());
 
@@ -85,10 +104,31 @@ public class BestellempfehlungController {
         bestellenColumn.setCellValueFactory(cellData -> cellData.getValue().bestellen);
         pInfoTable.setItems(dataShow);
 
-        recalculate(Integer.valueOf(wochen.getText()));
+        recalculate(Integer.valueOf(wochen.getText()), neueBerechnung.isSelected());
     }
 
-    public void calculateProduktinfos() {
+    public Map<Integer, Integer> getLastYearSoldData(LocalDate from, LocalDate to) {
+        List<Auftrag> auftraege = AuftragSession.getAllAuftraege();
+        LocalDate fromLast = from.minusYears(1);
+        LocalDate toLast = to.minusYears(1);
+        int sold = 0;
+        List<Auftrag> auftraegeInZeitraum = new ArrayList<>();
+        auftraege.stream().filter(a -> a.getErstellung().isAfter(fromLast) && a.getErstellung().isBefore(toLast)).forEach(auftraegeInZeitraum::add);
+        Map<Integer, Integer> data = new HashMap<>();
+        for (Auftrag a : auftraegeInZeitraum) {
+            for (Produktmenge p : a.getProdukte()) {
+                int key = p.getProdukt().getProduktNr();
+                if (!data.containsKey(key)) {
+                    data.put(key, p.getMenge());
+                } else {
+                    data.put(key, data.get(key) + p.getMenge());
+                }
+            }
+        }
+        return data;
+    }
+
+    public void calculateProduktinfos(int vorlaufzeit) {
         List<Auftrag> auftraege = AuftragSession.getAllAuftraege();
         List<Inventur> inventuren = InventurSession.getAllInventuren();
 
@@ -132,7 +172,7 @@ public class BestellempfehlungController {
             if (!ci.tageBisLeer.get().equals(errorMsg) && !ci.firstSold.equals(LocalDate.MAX)) {
                 long days = ChronoUnit.DAYS.between(ci.firstSold, LocalDate.now());
                 ci.dailyNeed = (double) ci.soldTotal / (double) days;
-                int actualStock = ci.inLastInvetur - ci.soldAfterLastInventur;
+                long actualStock = ci.inLastInvetur - ci.soldAfterLastInventur - Math.round(vorlaufzeit * ci.dailyNeed);
                 ci.lagerstand.set("" + actualStock);
                 if (days != 0) {
                     int daysToEmpty = (int) (actualStock / ci.dailyNeed);
@@ -161,11 +201,13 @@ public class BestellempfehlungController {
                         ci.bestellen.set(bestellen.format(dtf));
                 }
             }
-
         }
     }
 
-    public void recalculate(int y) {
+    public void recalculate(int wochen, boolean neueBerechnung) {
+        Map<Integer, Integer> lastYear = null;
+        if (neueBerechnung)
+            lastYear = getLastYearSoldData(LocalDate.now(), LocalDate.now().plusWeeks(wochen));
         dataShow.clear();
         String lieferant = lieferantChoiceBox.getValue();
         if (lieferant.equals("Alle"))
@@ -177,7 +219,12 @@ public class BestellempfehlungController {
             dataAll.stream().filter(ci -> produktNummern.contains(ci.produktNr.get())).forEach(dataShow::add);
         }
         for (CalculatedInfo ci : dataShow) {
-            long menge = Math.round(ci.dailyNeed * y * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
+            long menge;
+            if (neueBerechnung && lastYear.containsKey(ci.produktNr.get())) {
+                menge = lastYear.get(ci.produktNr.get()) - (ci.inLastInvetur - ci.soldAfterLastInventur);
+            } else {
+                menge = Math.round(ci.dailyNeed * wochen * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
+            }
             ci.gebrauchteMenge.set("" + Math.max(menge, 0));
         }
         FXCollections.sort(dataShow, (o1, o2) -> {
@@ -188,7 +235,7 @@ public class BestellempfehlungController {
     }
 
     public Map<Integer, CalculatedInfo> calculateForAlarm() {
-        calculateProduktinfos();
+        calculateProduktinfos(0);
         return produktInfos;
     }
 }
