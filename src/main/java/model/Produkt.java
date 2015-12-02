@@ -21,6 +21,7 @@ public class Produkt {
     private DoubleProperty umsatz;
     private byte[] image;
     private ObjectProperty<Image> fxImage;
+    private boolean imgSet;
 
     @Id
     public int getProduktNr() {
@@ -127,9 +128,10 @@ public class Produkt {
     }
 
     public void setImage(byte[] image) {
-        if (image != null) {
+        if (image != null && !imgSet) {
             this.image = image;
             readImage();
+            imgSet = true;
         }
     }
 
