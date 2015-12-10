@@ -10,9 +10,9 @@ import javafx.scene.image.Image;
  * Created by Viktor on 09.06.2015.
  */
 public class Eintrag {
+    final StringProperty bezeichnung = new SimpleStringProperty("");
+    final ObjectProperty<Image> bild = new SimpleObjectProperty<>();
+    final StringProperty preis = new SimpleStringProperty("");
     StringProperty produktNr = new SimpleStringProperty("");
     StringProperty menge = new SimpleStringProperty("");
-    StringProperty bezeichnung = new SimpleStringProperty("");
-    ObjectProperty<Image> bild = new SimpleObjectProperty<>();
-    StringProperty preis = new SimpleStringProperty("");
 }

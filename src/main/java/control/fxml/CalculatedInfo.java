@@ -9,28 +9,25 @@ import java.time.LocalDate;
  * Created by Viktor on 23.06.2015.
  */
 public class CalculatedInfo {
-    public IntegerProperty produktNr = new SimpleIntegerProperty();
-    public StringProperty tageBisLeer = new SimpleStringProperty("");
-    StringProperty bezeichnung = new SimpleStringProperty("");
-    ObjectProperty<Image> bild = new SimpleObjectProperty<>();
+    public final IntegerProperty produktNr = new SimpleIntegerProperty();
+    public final StringProperty tageBisLeer = new SimpleStringProperty("");
+    final StringProperty bezeichnung = new SimpleStringProperty("");
     //Bestellempfehlung
-    StringProperty lagerstand = new SimpleStringProperty("");
-    StringProperty gebrauchteMenge = new SimpleStringProperty("");
-    StringProperty bestellen = new SimpleStringProperty("");
-    int lieferzeit;
-
+    final StringProperty lagerstand = new SimpleStringProperty("");
+    final StringProperty gebrauchteMenge = new SimpleStringProperty("");
+    final StringProperty bestellen = new SimpleStringProperty("");
     //Soll-Ist-Vergleich
-    IntegerProperty sollStand = new SimpleIntegerProperty();
-    IntegerProperty istStand = new SimpleIntegerProperty();
-    StringProperty lastInvProp = new SimpleStringProperty("");
-    StringProperty status = new SimpleStringProperty("");
-
+    final IntegerProperty sollStand = new SimpleIntegerProperty();
+    final IntegerProperty istStand = new SimpleIntegerProperty();
+    final StringProperty lastInvProp = new SimpleStringProperty("");
+    final StringProperty status = new SimpleStringProperty("");
     //Jahresvergleich
-    IntegerProperty stuckzahl1 = new SimpleIntegerProperty();
-    DoubleProperty umsatz1 = new SimpleDoubleProperty();
-    IntegerProperty stuckzahl2 = new SimpleIntegerProperty();
-    DoubleProperty umsatz2 = new SimpleDoubleProperty();
-
+    final IntegerProperty stuckzahl1 = new SimpleIntegerProperty();
+    final DoubleProperty umsatz1 = new SimpleDoubleProperty();
+    final IntegerProperty stuckzahl2 = new SimpleIntegerProperty();
+    final DoubleProperty umsatz2 = new SimpleDoubleProperty();
+    ObjectProperty<Image> bild = new SimpleObjectProperty<>();
+    int lieferzeit;
     LocalDate firstSold = LocalDate.MAX;
     LocalDate preLastInventur = LocalDate.MIN;
     LocalDate lastInventur = LocalDate.MIN;

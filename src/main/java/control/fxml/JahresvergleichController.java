@@ -28,10 +28,9 @@ public class JahresvergleichController {
 
     private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
     private final Callback imageCellFactory = new ImageCellFactory();
-    private ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
+    private final ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
+    private final LocalDate now = LocalDate.now();
     private List<CalculatedInfo> dataAll;
-    private LocalDate now = LocalDate.now();
-
     @FXML
     private ChoiceBox<String> kundenChoiceBox;
 

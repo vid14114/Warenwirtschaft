@@ -22,10 +22,10 @@ import java.util.*;
 public class BestellempfehlungController {
     private final Callback imageCellFactory = new ImageCellFactory();
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
-    private ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
+    private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
+    private final ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
+    private final List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
     private List<CalculatedInfo> dataAll;
-    private List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
     private int wochenI;
 
     @FXML
@@ -113,11 +113,11 @@ public class BestellempfehlungController {
         recalculate(Integer.valueOf(wochen.getText()), getBerechnungsmethode());
     }
 
-    public boolean getBerechnungsmethode() {
+    private boolean getBerechnungsmethode() {
         return !durchschnitt.isSelected();
     }
 
-    public Map<Integer, Integer> getLastYearSoldData(LocalDate from, LocalDate to) {
+    private Map<Integer, Integer> getLastYearSoldData(LocalDate from, LocalDate to) {
         List<Auftrag> auftraege = AuftragSession.getAllAuftraege();
         LocalDate fromLast = from.minusYears(1);
         LocalDate toLast = to.minusYears(1);
@@ -137,7 +137,7 @@ public class BestellempfehlungController {
         return data;
     }
 
-    public void calculateProduktinfos(int vorlaufzeit) {
+    private void calculateProduktinfos(int vorlaufzeit) {
         for (CalculatedInfo ci : produktInfos.values()) {
             ci.soldTotal = 0;
             ci.soldAfterLastInventur = 0;
@@ -217,7 +217,7 @@ public class BestellempfehlungController {
         }
     }
 
-    public void recalculate(int wochen, boolean neueBerechnungAktiv) {
+    private void recalculate(int wochen, boolean neueBerechnungAktiv) {
         Map<Integer, Integer> lastYear = null;
         if (neueBerechnungAktiv)
             lastYear = getLastYearSoldData(LocalDate.now(), LocalDate.now().plusWeeks(wochen));
@@ -245,6 +245,7 @@ public class BestellempfehlungController {
             int menge2 = Integer.valueOf(o2.tageBisLeer.get());
             return menge1 - menge2;
         });
+        pInfoTable.refresh();
     }
 
     public Map<Integer, CalculatedInfo> calculateForAlarm() {

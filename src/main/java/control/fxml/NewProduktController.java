@@ -191,7 +191,7 @@ public class NewProduktController {
         imageView.setImage(i);
     }
 
-    public void showError(String error) {
+    private void showError(String error) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.initOwner(dialogStage);
         alert.setTitle("Ungültiger Text");

@@ -30,8 +30,8 @@ public class AuftragDetailsController {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Callback vCellFactory = new VCellFactory();
     private final Callback imageCellFactory = new ImageCellFactory();
-    List<String> kList;
-    private ObservableList<Eintrag> data = FXCollections.observableArrayList();
+    private final ObservableList<Eintrag> data = FXCollections.observableArrayList();
+    private List<String> kList;
     private Stage dialogStage;
     private boolean saveClicked;
     private Auftrag toEdit;

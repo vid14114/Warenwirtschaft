@@ -26,9 +26,9 @@ import java.util.*;
 public class SollIstVergleichController {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Callback imageCellFactory = new ImageCellFactory();
-    List<Inventur> inventuren = InventurSession.getAllInventuren();
-    private Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
-    private ObservableList<CalculatedInfo> data = FXCollections.observableArrayList();
+    private final List<Inventur> inventuren = InventurSession.getAllInventuren();
+    private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
+    private final ObservableList<CalculatedInfo> data = FXCollections.observableArrayList();
     @FXML
     private ChoiceBox<String> vonChoiceBox;
     @FXML
