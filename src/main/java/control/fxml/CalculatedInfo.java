@@ -16,6 +16,7 @@ public class CalculatedInfo {
     final StringProperty lagerstand = new SimpleStringProperty("");
     final StringProperty gebrauchteMenge = new SimpleStringProperty("");
     final StringProperty bestellen = new SimpleStringProperty("");
+    final StringProperty kategorie = new SimpleStringProperty("");
     //Soll-Ist-Vergleich
     final IntegerProperty sollStand = new SimpleIntegerProperty();
     final IntegerProperty istStand = new SimpleIntegerProperty();

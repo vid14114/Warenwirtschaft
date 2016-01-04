@@ -38,6 +38,8 @@ public class BestellempfehlungController {
     @FXML
     private TableColumn<CalculatedInfo, String> bezColumn;
     @FXML
+    private TableColumn<CalculatedInfo, String> kategorieColumn;
+    @FXML
     private TableColumn<CalculatedInfo, Image> bildColumn;
     @FXML
     private TableColumn<CalculatedInfo, String> lagerstandColumn;
@@ -88,6 +90,7 @@ public class BestellempfehlungController {
 
         pNrColumn.setCellValueFactory(cellData -> cellData.getValue().produktNr);
         bezColumn.setCellValueFactory(cellData -> cellData.getValue().bezeichnung);
+        kategorieColumn.setCellValueFactory(cellData -> cellData.getValue().kategorie);
         bildColumn.setCellValueFactory(cellData -> cellData.getValue().bild);
         bildColumn.setCellFactory(imageCellFactory);
         lagerstandColumn.setCellValueFactory(cellData -> cellData.getValue().lagerstand);
@@ -139,7 +142,8 @@ public class BestellempfehlungController {
                 if (!produktInfos.containsKey(key))
                     produktInfos.put(key, new CalculatedInfo(key));
                 CalculatedInfo ci = produktInfos.get(key);
-                ci.bezeichnung.set(pm.getProdukt().getKateogrie().name() + ": " + pm.getProdukt().getBez());
+                ci.bezeichnung.set(pm.getProdukt().getBez());
+                ci.kategorie.set(pm.getProdukt().getKateogrie().name());
                 ci.bild = pm.getProdukt().getImageProperty();
                 ci.vorratswochen = pm.getProdukt().getVorratswochen();
                 if (i.getDatum().isAfter(ci.lastInventur)) {
@@ -222,7 +226,7 @@ public class BestellempfehlungController {
         for (CalculatedInfo ci : dataShow) {
             long menge;
             if (neueBerechnungAktiv && lastYear.containsKey(ci.produktNr.get())) {
-                menge = lastYear.get(ci.produktNr.get()) - (ci.inLastInvetur - ci.soldAfterLastInventur) * ci.vorratswochen / maxWochen;
+                menge = (lastYear.get(ci.produktNr.get()) - (ci.inLastInvetur - ci.soldAfterLastInventur)) * ci.vorratswochen / maxWochen;
             } else {
                 menge = Math.round(ci.dailyNeed * ci.vorratswochen * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
             }

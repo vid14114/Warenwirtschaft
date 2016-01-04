@@ -14,10 +14,11 @@
                 <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="880.0">
                     <columns>
                         <TableColumn fx:id="pNrColumn" prefWidth="72.0" text="ProduktNr"/>
-                        <TableColumn fx:id="bezColumn" prefWidth="271.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="bezColumn" prefWidth="200.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="kategorieColumn" prefWidth="95.0" text="Kategorie"/>
                         <TableColumn fx:id="bildColumn" text="Bild"/>
-                        <TableColumn fx:id="lagerstandColumn" prefWidth="98.0" text="Lagerstand"/>
-                        <TableColumn fx:id="daysToEmptyColumn" prefWidth="99.0" text="Tage bis leer"/>
+                        <TableColumn fx:id="lagerstandColumn" prefWidth="90.0" text="Lagerstand"/>
+                        <TableColumn fx:id="daysToEmptyColumn" prefWidth="90.0" text="Tage bis leer"/>
                         <TableColumn fx:id="mengeColumn" minWidth="0.0" prefWidth="110.0" text="Benötigte Menge"/>
                         <TableColumn fx:id="bestellenColumn" prefWidth="136.0" text="Spätestens bestellen"/>
                     </columns>

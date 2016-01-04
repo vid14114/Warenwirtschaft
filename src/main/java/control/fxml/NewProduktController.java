@@ -78,8 +78,11 @@ public class NewProduktController {
                 p = new Produkt();
                 p.setProduktNr(Integer.valueOf(produktNrField.getText()));
                 p.setVkPreis(Float.valueOf(vkPreisField.getText().replace(',', '.')));
-            } else
+            } else {
                 p = update;
+                lieferanten.stream().forEach(l -> l.getProdukte().remove(p));
+                lieferanten.stream().forEach(LieferantSession::saveLieferant);
+            }
             String kat = kategorieField.getValue();
             p.setKateogrie(Kategorie.valueOf(kat));
             p.setBez(bezField.getText());
@@ -111,11 +114,7 @@ public class NewProduktController {
         ekPreisField.setText("" + p.getEkPreis());
         if (p.getImageProperty() != null)
             imageView.setImage(p.getImageProperty().get());
-
         lieferanten.stream().filter(l -> l.getProdukte().contains(p)).forEach(l -> lieferantenList.getSelectionModel().select(l.getName()));
-        lieferanten.stream().forEach(l -> l.getProdukte().remove(p));
-        lieferanten.stream().forEach(LieferantSession::saveLieferant);
-
         vorratswochenField.setText("" + p.getVorratswochen());
 
         produktNrField.setEditable(false);
