@@ -26,10 +26,7 @@ public class BestellempfehlungController {
     private final ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
     private final List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
     private List<CalculatedInfo> dataAll;
-    private int wochenI;
 
-    @FXML
-    private TextField wochen;
     @FXML
     private TextField vorlaufzeit;
     @FXML
@@ -62,7 +59,6 @@ public class BestellempfehlungController {
         lieferanten.stream().forEach(l -> lieferantenChoice.add(l.getName()));
         lieferantChoiceBox.setItems(lieferantenChoice);
         lieferantChoiceBox.setValue("Alle");
-        wochen.setText("" + 1);
         vorlaufzeit.setText("" + 0);
         calculateProduktinfos(0);
 
@@ -71,32 +67,22 @@ public class BestellempfehlungController {
         vorjahr.setToggleGroup(berechnungsmethode);
         durchschnitt.setSelected(true);
 
-        wochen.textProperty().addListener((observable1, oldValue, newValue) -> {
-            try {
-                int w = Integer.valueOf(newValue);
-                wochenI = w;
-                recalculate(w, getBerechnungsmethode());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        });
-
         vorlaufzeit.textProperty().addListener(((observable1, oldValue, newValue) -> {
             try {
                 int v = Integer.valueOf(newValue);
                 //produktInfos = new TreeMap<>();
                 calculateProduktinfos(v);
-                recalculate(wochenI, getBerechnungsmethode());
+                recalculate(getBerechnungsmethode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }));
 
         lieferantChoiceBox.valueProperty().addListener((observable -> {
-            recalculate(Integer.valueOf(wochen.getText()), getBerechnungsmethode());
+            recalculate(getBerechnungsmethode());
         }));
 
-        berechnungsmethode.selectedToggleProperty().addListener(observable1 -> recalculate(Integer.valueOf(wochen.getText()), getBerechnungsmethode()));
+        berechnungsmethode.selectedToggleProperty().addListener(observable1 -> recalculate(getBerechnungsmethode()));
 
         dataAll = FXCollections.observableArrayList(produktInfos.values());
 
@@ -110,7 +96,7 @@ public class BestellempfehlungController {
         bestellenColumn.setCellValueFactory(cellData -> cellData.getValue().bestellen);
         pInfoTable.setItems(dataShow);
 
-        recalculate(Integer.valueOf(wochen.getText()), getBerechnungsmethode());
+        recalculate(getBerechnungsmethode());
     }
 
     private boolean getBerechnungsmethode() {
@@ -155,6 +141,7 @@ public class BestellempfehlungController {
                 CalculatedInfo ci = produktInfos.get(key);
                 ci.bezeichnung.set(pm.getProdukt().getKateogrie().name() + ": " + pm.getProdukt().getBez());
                 ci.bild = pm.getProdukt().getImageProperty();
+                ci.vorratswochen = pm.getProdukt().getVorratswochen();
                 if (i.getDatum().isAfter(ci.lastInventur)) {
                     ci.lastInventur = i.getDatum();     //aktuellste Inventur
                     ci.inLastInvetur = pm.getMenge();   //Lagerstand der aktuellsten Inventur
@@ -217,10 +204,11 @@ public class BestellempfehlungController {
         }
     }
 
-    private void recalculate(int wochen, boolean neueBerechnungAktiv) {
+    private void recalculate(boolean neueBerechnungAktiv) {
         Map<Integer, Integer> lastYear = null;
+        int maxWochen = dataAll.stream().mapToInt(a -> a.vorratswochen).max().getAsInt();
         if (neueBerechnungAktiv)
-            lastYear = getLastYearSoldData(LocalDate.now(), LocalDate.now().plusWeeks(wochen));
+            lastYear = getLastYearSoldData(LocalDate.now(), LocalDate.now().plusWeeks(maxWochen));
         dataShow.clear();
         String lieferant = lieferantChoiceBox.getValue();
         if (lieferant.equals("Alle"))
@@ -234,9 +222,9 @@ public class BestellempfehlungController {
         for (CalculatedInfo ci : dataShow) {
             long menge;
             if (neueBerechnungAktiv && lastYear.containsKey(ci.produktNr.get())) {
-                menge = lastYear.get(ci.produktNr.get()) - (ci.inLastInvetur - ci.soldAfterLastInventur);
+                menge = lastYear.get(ci.produktNr.get()) - (ci.inLastInvetur - ci.soldAfterLastInventur) * ci.vorratswochen / maxWochen;
             } else {
-                menge = Math.round(ci.dailyNeed * wochen * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
+                menge = Math.round(ci.dailyNeed * ci.vorratswochen * 7 - (ci.inLastInvetur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
             }
             ci.gebrauchteMenge.set("" + Math.max(menge, 0));
         }

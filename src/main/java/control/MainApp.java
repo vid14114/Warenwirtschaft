@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -14,7 +13,6 @@ import model.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * Created by Viktor on 21.05.2015.
@@ -58,7 +56,7 @@ public class MainApp extends Application {
         KundenOverviewController controller = loader.getController();
         controller.setMainApp(this);
 
-        BestellempfehlungController b = new BestellempfehlungController();
+        /*BestellempfehlungController b = new BestellempfehlungController();
         Map<Integer, CalculatedInfo> data = b.calculateForAlarm();
         String msg = "";
         for (CalculatedInfo ci : data.values()) {
@@ -72,7 +70,7 @@ public class MainApp extends Application {
             alert.setTitle("Produkte bald nicht mehr auf Lager");
             alert.setContentText(msg);
             alert.showAndWait();
-        }
+        }*/
     }
 
     public boolean showNewKundeDialog() {

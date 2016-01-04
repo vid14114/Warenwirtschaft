@@ -36,6 +36,7 @@ public class CalculatedInfo {
     int inLastInvetur;
     int inPreLastInventur;
     double dailyNeed;
+    int vorratswochen;
 
     CalculatedInfo(int produktNr) {
         this.produktNr.set(produktNr);

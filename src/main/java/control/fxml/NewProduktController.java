@@ -50,6 +50,8 @@ public class NewProduktController {
     private ImageView imageView;
     @FXML
     private ListView<String> lieferantenList;
+    @FXML
+    private TextField vorratswochenField;
 
     @FXML
     private void initialize() {
@@ -83,6 +85,7 @@ public class NewProduktController {
             p.setBez(bezField.getText());
             p.setEkPreis(ekPreisField.getText().length() < 1 ? 0 : Float.valueOf(ekPreisField.getText().replace(',', '.')));
             p.setImage(bImg);
+            p.setVorratswochen(Integer.valueOf(vorratswochenField.getText()));
             ProduktSession.saveProdukt(p);
             for (String s : selectedLieferanten) {
                 Lieferant l = LieferantSession.getLieferantByName(s);
@@ -113,6 +116,8 @@ public class NewProduktController {
         lieferanten.stream().forEach(l -> l.getProdukte().remove(p));
         lieferanten.stream().forEach(LieferantSession::saveLieferant);
 
+        vorratswochenField.setText("" + p.getVorratswochen());
+
         produktNrField.setEditable(false);
         produktNrField.setDisable(true);
         vkPreisField.setEditable(false);
@@ -125,7 +130,9 @@ public class NewProduktController {
         fields.add(bezField.getText());
         String tmp = vkPreisField.getText();
         String ek = ekPreisField.getText();
+        String vWochen = vorratswochenField.getText();
         fields.add(tmp.replace(',', '.'));
+        fields.add(vWochen);
 
         for (String s : fields) {
             if (s.length() < 1) {
@@ -159,6 +166,14 @@ public class NewProduktController {
             }
         } catch (NumberFormatException e) {
             showError("Einkaufspreis ist keine positive Zahl");
+        }
+        try {
+            int vorratswochen = Integer.valueOf(vWochen);
+            if (vorratswochen < 1)
+                throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            showError("Vorratswochen ist keine positive Zahl");
+            return false;
         }
         if (update == null) {
             List<Produkt> produkte = ProduktSession.getAllProdukte();

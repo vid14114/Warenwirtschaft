@@ -21,6 +21,7 @@ public class Produkt {
     private DoubleProperty umsatz;
     private byte[] image;
     private ObjectProperty<Image> fxImage;
+    private int vorratswochen;
 
     @Id
     public int getProduktNr() {
@@ -107,6 +108,15 @@ public class Produkt {
 
     public void setUmsatz(Double umsatz) {
         this.umsatz = umsatz != null ? new SimpleDoubleProperty(umsatz) : new SimpleDoubleProperty(0);
+    }
+
+    @Basic
+    public Integer getVorratswochen() {
+        return vorratswochen;
+    }
+
+    public void setVorratswochen(Integer vorratswochen) {
+        this.vorratswochen = vorratswochen != null ? vorratswochen : 1;
     }
 
     public void calculateUmsatz() {

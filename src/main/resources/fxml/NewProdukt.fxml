@@ -27,11 +27,13 @@
                 <ImageView fx:id="imageView" fitHeight="76.0" fitWidth="117.0" layoutX="204.0" layoutY="85.0"
                            pickOnBounds="true" preserveRatio="true"/>
                 <Label layoutX="12.0" layoutY="180.0" text="Lieferanten:"/>
-                <ListView fx:id="lieferantenList" layoutX="99.0" layoutY="180.0" prefHeight="91.0" prefWidth="326.0"/>
+                <ListView fx:id="lieferantenList" layoutX="99.0" layoutY="180.0" prefHeight="45.0" prefWidth="326.0"/>
+                <Label layoutX="12.0" layoutY="242.0" text="Vorratswochen:"/>
                 <Button layoutX="57.0" layoutY="289.0" mnemonicParsing="false" onAction="#handleAdd"
                         text="Produkt speichern"/>
                 <Button layoutX="318.0" layoutY="289.0" mnemonicParsing="false" onAction="#handleCancel"
                         text="Abbrechen"/>
+                <TextField fx:id="vorratswochenField" layoutX="102.0" layoutY="238.0"/>
             </children>
         </AnchorPane>
     </content>
