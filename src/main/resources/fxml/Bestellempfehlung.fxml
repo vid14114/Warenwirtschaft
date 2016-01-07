@@ -4,38 +4,41 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <TitledPane xmlns:fx="http://javafx.com/fxml/1" animated="false" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" text="Bestellempfehlungen"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="1150.0" text="Bestellempfehlungen"
             xmlns="http://javafx.com/javafx/8.0.40" fx:controller="control.fxml.BestellempfehlungController">
     <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <children>
                 <Label layoutX="295.0" layoutY="14.0" text="Bearbeitungszeit:"/>
                 <TextField fx:id="vorlaufzeit" layoutX="386.0" layoutY="10.0" prefHeight="25.0" prefWidth="74.0"/>
-                <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="880.0">
+                <TableView fx:id="pInfoTable" layoutX="14.0" layoutY="54.0" prefHeight="500.0" prefWidth="900.0">
                     <columns>
                         <TableColumn fx:id="pNrColumn" prefWidth="72.0" text="ProduktNr"/>
-                        <TableColumn fx:id="bezColumn" prefWidth="200.0" text="Bezeichnung"/>
-                        <TableColumn fx:id="kategorieColumn" prefWidth="95.0" text="Kategorie"/>
+                        <TableColumn fx:id="bezColumn" prefWidth="150.0" text="Bezeichnung"/>
+                        <TableColumn fx:id="kategorieColumn" text="Kategorie"/>
                         <TableColumn fx:id="bildColumn" text="Bild"/>
-                        <TableColumn fx:id="lagerstandColumn" prefWidth="90.0" text="Lagerstand"/>
-                        <TableColumn fx:id="daysToEmptyColumn" prefWidth="90.0" text="Tage bis leer"/>
+                        <TableColumn fx:id="vorratswochenColumn" prefWidth="90.0" text="Vorratswochen"/>
+                        <TableColumn fx:id="lagerstandColumn" text="Lagerstand"/>
+                        <TableColumn fx:id="daysToEmptyColumn" text="Tage bis leer"/>
                         <TableColumn fx:id="mengeColumn" minWidth="0.0" prefWidth="110.0" text="Benötigte Menge"/>
-                        <TableColumn fx:id="bestellenColumn" prefWidth="136.0" text="Spätestens bestellen"/>
+                        <TableColumn fx:id="bestellenColumn" prefWidth="130.0" text="Spätestens bestellen"/>
                     </columns>
                 </TableView>
                 <Label layoutX="625.0" layoutY="14.0" text="Lieferant:"/>
                 <ChoiceBox fx:id="lieferantChoiceBox" layoutX="680.0" layoutY="10.0" prefHeight="25.0"
                            prefWidth="214.0"/>
                 <Label layoutX="460.0" layoutY="14.0" text="Tage"/>
-                <Label layoutX="910.0" layoutY="9.0" text="Berechnungsmethode">
+                <Label layoutX="938.0" layoutY="14.0" text="Berechnungsmethode">
                     <font>
                         <Font size="18.0"/>
                     </font>
                 </Label>
-                <RadioButton fx:id="durchschnitt" layoutX="910.0" layoutY="89.0" mnemonicParsing="false"
+                <RadioButton fx:id="durchschnitt" layoutX="938.0" layoutY="94.0" mnemonicParsing="false"
                              text="Durchschnitt"/>
-                <RadioButton fx:id="vorjahr" layoutX="910.0" layoutY="120.0" mnemonicParsing="false"
+                <RadioButton fx:id="vorjahr" layoutX="938.0" layoutY="125.0" mnemonicParsing="false"
                              text="Vorjahresdaten im Zeitraum"/>
+                <Label layoutX="311.0" layoutY="565.0" text="Filter:"/>
+                <TextField fx:id="filterField" layoutX="348.0" layoutY="561.0"/>
             </children>
         </AnchorPane>
     </content>

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Viktor on 11.06.2015.
@@ -42,6 +43,8 @@ public class BestellempfehlungController {
     @FXML
     private TableColumn<CalculatedInfo, Image> bildColumn;
     @FXML
+    private TableColumn<CalculatedInfo, String> vorratswochenColumn;
+    @FXML
     private TableColumn<CalculatedInfo, String> lagerstandColumn;
     @FXML
     private TableColumn<CalculatedInfo, String> daysToEmptyColumn;
@@ -53,6 +56,8 @@ public class BestellempfehlungController {
     private RadioButton durchschnitt;
     @FXML
     private RadioButton vorjahr;
+    @FXML
+    private TextField filterField;
 
     @FXML
     private void initialize() {
@@ -93,13 +98,26 @@ public class BestellempfehlungController {
         kategorieColumn.setCellValueFactory(cellData -> cellData.getValue().kategorie);
         bildColumn.setCellValueFactory(cellData -> cellData.getValue().bild);
         bildColumn.setCellFactory(imageCellFactory);
+        vorratswochenColumn.setCellValueFactory(cellData -> cellData.getValue().vorratswochenProperty);
         lagerstandColumn.setCellValueFactory(cellData -> cellData.getValue().lagerstand);
         daysToEmptyColumn.setCellValueFactory(cellData -> cellData.getValue().tageBisLeer);
         mengeColumn.setCellValueFactory(cellData -> cellData.getValue().gebrauchteMenge);
         bestellenColumn.setCellValueFactory(cellData -> cellData.getValue().bestellen);
         pInfoTable.setItems(dataShow);
 
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterProducts(newValue);
+        });
+
         recalculate(getBerechnungsmethode());
+    }
+
+    public void filterProducts(String s) {
+        if (s.length() > 0) {
+            List<CalculatedInfo> filteredProducts = dataShow.stream().filter(p -> p.bezeichnung.get().contains(s) || ("" + p.produktNr.get()).contains(s)).collect(Collectors.toList());
+            pInfoTable.setItems(FXCollections.observableArrayList(filteredProducts));
+        } else
+            pInfoTable.setItems(dataShow);
     }
 
     private boolean getBerechnungsmethode() {
@@ -146,6 +164,7 @@ public class BestellempfehlungController {
                 ci.kategorie.set(pm.getProdukt().getKateogrie().name());
                 ci.bild = pm.getProdukt().getImageProperty();
                 ci.vorratswochen = pm.getProdukt().getVorratswochen();
+                ci.vorratswochenProperty.set("" + ci.vorratswochen);
                 if (i.getDatum().isAfter(ci.lastInventur)) {
                     ci.lastInventur = i.getDatum();     //aktuellste Inventur
                     ci.inLastInvetur = pm.getMenge();   //Lagerstand der aktuellsten Inventur

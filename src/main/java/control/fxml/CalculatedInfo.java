@@ -17,6 +17,7 @@ public class CalculatedInfo {
     final StringProperty gebrauchteMenge = new SimpleStringProperty("");
     final StringProperty bestellen = new SimpleStringProperty("");
     final StringProperty kategorie = new SimpleStringProperty("");
+    final StringProperty vorratswochenProperty = new SimpleStringProperty("");
     //Soll-Ist-Vergleich
     final IntegerProperty sollStand = new SimpleIntegerProperty();
     final IntegerProperty istStand = new SimpleIntegerProperty();
@@ -28,6 +29,7 @@ public class CalculatedInfo {
     final IntegerProperty stuckzahl2 = new SimpleIntegerProperty();
     final DoubleProperty umsatz2 = new SimpleDoubleProperty();
     ObjectProperty<Image> bild = new SimpleObjectProperty<>();
+
     int lieferzeit;
     LocalDate firstSold = LocalDate.MAX;
     LocalDate preLastInventur = LocalDate.MIN;

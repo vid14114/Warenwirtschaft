@@ -3,13 +3,9 @@ package control.fxml;
 import control.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -20,6 +16,7 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,6 +24,8 @@ import java.util.List;
  */
 public class KundenOverviewController {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final Callback imageCellFactory = new ImageCellFactory();
+    private List<Produkt> produkte;
     @FXML
     private TableView<Kunde> kundenTable;
     @FXML
@@ -59,6 +58,8 @@ public class KundenOverviewController {
     private TableColumn<Produkt, Number> pUmsatzColumn;
     @FXML
     private TableColumn<Produkt, Image> pImageColumn;
+    @FXML
+    private TextField filterField;
 
     @FXML
     private TableView<Inventur> inventurTable;
@@ -163,17 +164,9 @@ public class KundenOverviewController {
         vkPreisColumn.setCellValueFactory(cellData -> cellData.getValue().getVkPreisProperty());
         pUmsatzColumn.setCellValueFactory(cellData -> cellData.getValue().getUmsatzProperty());
         pImageColumn.setCellValueFactory(cellData -> cellData.getValue().getImageProperty());
-        pImageColumn.setCellFactory(param -> new TableCell<Produkt, Image>() {
-            @Override
-            public void updateItem(Image item, boolean empty) {
-                if (!empty) {
-                    ImageView iv = new ImageView();
-                    iv.setFitHeight(50);
-                    iv.setFitWidth(70);
-                    iv.setImage(item);
-                    setGraphic(iv);
-                }
-            }
+        pImageColumn.setCellFactory(imageCellFactory);
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterProducts(newValue);
         });
 
         invDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDatumProperty());
@@ -254,6 +247,14 @@ public class KundenOverviewController {
                 return cell;
             }
         });
+    }
+
+    public void filterProducts(String s) {
+        if (s.length() > 0) {
+            List<Produkt> filteredProducts = produkte.stream().filter(p -> p.getBez().contains(s) || ("" + p.getProduktNr()).contains(s)).collect(Collectors.toList());
+            produkteTable.setItems(FXCollections.observableArrayList(filteredProducts));
+        } else
+            produkteTable.setItems(FXCollections.observableArrayList(produkte));
     }
 
     public void setMainApp(MainApp mainApp) {
@@ -388,7 +389,9 @@ public class KundenOverviewController {
     private void handleRefresh() {
         kundenTable.setItems(FXCollections.observableArrayList(KundeSession.getAllKunden()));
         auftraegeTable.setItems(FXCollections.observableArrayList(AuftragSession.getAllAuftraege()));
-        produkteTable.setItems(FXCollections.observableArrayList(ProduktSession.getAllProdukte()));
+        //produkteTable.setItems(FXCollections.observableArrayList(ProduktSession.getAllProdukte()));
+        produkte = ProduktSession.getAllProdukte();
+        filterProducts(filterField.getText());
         inventurTable.setItems(FXCollections.observableArrayList(InventurSession.getAllInventuren()));
         lieferantenTable.setItems(FXCollections.observableArrayList(LieferantSession.getAllLieferanten()));
         zulieferungenTable.setItems(FXCollections.observableArrayList(ZulieferungSession.getAllZulieferungen()));

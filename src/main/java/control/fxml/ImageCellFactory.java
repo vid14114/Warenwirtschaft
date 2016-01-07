@@ -18,14 +18,15 @@ public class ImageCellFactory implements Callback<TableColumn<CalculatedInfo, Im
     private static class CalculatedInfoImageTableCell extends TableCell<CalculatedInfo, Image> {
         @Override
         public void updateItem(Image item, boolean empty) {
+            ImageView iv = new ImageView();
+            iv.setFitHeight(50);
+            iv.setFitWidth(70);
+            setStyle("-fx-background-color: aliceblue");
             if (!empty) {
-                ImageView iv = new ImageView();
-                iv.setFitHeight(50);
-                iv.setFitWidth(70);
                 iv.setImage(item);
                 setGraphic(iv);
-                setStyle("-fx-background-color: aliceblue");
-            }
+            } else
+                setGraphic(null);
         }
     }
 }
