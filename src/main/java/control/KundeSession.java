@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Kunde;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,13 +37,6 @@ public enum KundeSession {
         return k;
     }
 
-    public static Kunde getKunde(int id) {
-        Session session = MyConfig.getSessionFactory().openSession();
-        Kunde k = (Kunde) session.createQuery("from Kunde where kdNr = " + id).uniqueResult();
-        session.close();
-        return k;
-    }
-
     public static void saveKunde(Kunde k) {
         Session session = MyConfig.getSessionFactory().openSession();
         k.calculateUmsatz();
@@ -50,6 +44,7 @@ public enum KundeSession {
         session.saveOrUpdate(k);
         t.commit();
         session.close();
+        Log.info("Saving " + k);
     }
 
     public static void removeKunde(Kunde k) {
@@ -58,5 +53,6 @@ public enum KundeSession {
         session.delete(k);
         t.commit();
         session.close();
+        Log.info("Removing " + k);
     }
 }

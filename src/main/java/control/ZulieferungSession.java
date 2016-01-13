@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Zulieferung;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -24,6 +25,7 @@ public class ZulieferungSession {
         session.saveOrUpdate(z);
         t.commit();
         session.close();
+        Log.info("Saving " + z);
     }
 
     public static void removeZulieferung(Zulieferung z) {
@@ -32,5 +34,6 @@ public class ZulieferungSession {
         session.delete(z);
         t.commit();
         session.close();
+        Log.info("Removing " + z);
     }
 }

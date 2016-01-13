@@ -107,4 +107,9 @@ public class Auftrag {
     public StringProperty getKundeProperty() {
         return kundeName;
     }
+
+    @Override
+    public String toString() {
+        return "Auftrag (" + getAuftrNr() + "," + getKunde().getName() + "," + getWert() + ")";
+    }
 }

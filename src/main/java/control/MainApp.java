@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import control.fxml.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,9 +28,13 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Log.setLogger(new MyLogger());
+        Log.INFO();
+        Log.trace("Starting application");
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zentrallager");
         primaryStage.setOnCloseRequest(event -> {
+            Log.trace("Exiting application");
             Platform.exit();
             System.exit(0);
         });

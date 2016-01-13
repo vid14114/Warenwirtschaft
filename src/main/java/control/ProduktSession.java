@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Produkt;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,6 +37,7 @@ public enum ProduktSession {
         session.saveOrUpdate(p);
         t.commit();
         session.close();
+        Log.info("Saving " + p);
     }
 
     public static void removeProdukt(Produkt p) {
@@ -44,5 +46,6 @@ public enum ProduktSession {
         session.delete(p);
         t.commit();
         session.close();
+        Log.info("Removing " + p);
     }
 }

@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Inventur;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -22,19 +23,13 @@ public enum InventurSession {
         return result;
     }
 
-    public static Inventur getInventur(int id) {
-        Session session = MyConfig.getSessionFactory().openSession();
-        Inventur i = (Inventur) session.createQuery("from Inventur where id = " + id).uniqueResult();
-        session.close();
-        return i;
-    }
-
     public static void saveInventur(Inventur i) {
         Session session = MyConfig.getSessionFactory().openSession();
         Transaction t = session.beginTransaction();
         session.saveOrUpdate(i);
         t.commit();
         session.close();
+        Log.info("Saving " + i);
     }
 
     public static void removeInventur(Inventur i) {
@@ -43,5 +38,6 @@ public enum InventurSession {
         session.delete(i);
         t.commit();
         session.close();
+        Log.info("Removing " + i);
     }
 }

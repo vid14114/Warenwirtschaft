@@ -1,5 +1,6 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Lieferant;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -31,6 +32,7 @@ public class LieferantSession {
         session.saveOrUpdate(l);
         t.commit();
         session.close();
+        Log.info("Saving " + l);
     }
 
     public static void removeLieferant(Lieferant l) {
@@ -39,5 +41,6 @@ public class LieferantSession {
         session.delete(l);
         t.commit();
         session.close();
+        Log.info("Removing " + l);
     }
 }

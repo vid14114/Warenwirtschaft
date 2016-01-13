@@ -157,4 +157,9 @@ public class Produkt {
     public boolean equals(Object obj) {
         return obj != null && ((Produkt) obj).getProduktNr() == getProduktNr();
     }
+
+    @Override
+    public String toString() {
+        return "Produkt (" + getProduktNr() + "," + getBez() + "," + getVkPreis() + ")";
+    }
 }

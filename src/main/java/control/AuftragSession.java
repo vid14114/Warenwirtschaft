@@ -1,7 +1,7 @@
 package control;
 
+import com.esotericsoftware.minlog.Log;
 import model.Auftrag;
-import model.Kunde;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -24,20 +24,6 @@ public enum AuftragSession {
         return result;
     }
 
-    public static List<Auftrag> getAuftraegeByKunde(Kunde k) {
-        Session session = MyConfig.getSessionFactory().openSession();
-        List<Auftrag> result = (List<Auftrag>) session.createQuery("select auftraege from Kunde where kdNr = " + k.getKdNr()).list();
-        session.close();
-        return result;
-    }
-
-    public static Auftrag getAuftrag(int id) {
-        Session session = MyConfig.getSessionFactory().openSession();
-        Auftrag a = (Auftrag) session.createQuery("from Auftrag where auftrNr = " + id).uniqueResult();
-        session.close();
-        return a;
-    }
-
     public static void saveAuftrag(Auftrag a) {
         Session session = MyConfig.getSessionFactory().openSession();
         a.calculateWert();
@@ -45,6 +31,7 @@ public enum AuftragSession {
         session.saveOrUpdate(a);
         t.commit();
         session.close();
+        Log.info("Saving " + a);
     }
 
     public static void removeAuftrag(Auftrag a) {
@@ -53,5 +40,6 @@ public enum AuftragSession {
         session.delete(a);
         t.commit();
         session.close();
+        Log.info("Removing " + a);
     }
 }

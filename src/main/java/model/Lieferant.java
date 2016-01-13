@@ -58,5 +58,8 @@ public class Lieferant {
         this.produkte = produkte;
     }
 
-
+    @Override
+    public String toString() {
+        return "Lieferant (" + getName() + "," + getLieferzeit() + ")";
+    }
 }

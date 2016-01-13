@@ -81,4 +81,9 @@ public class Kunde {
         Kunde k = (Kunde) obj;
         return k.getKdNr() == getKdNr();
     }
+
+    @Override
+    public String toString() {
+        return "Kunde (" + getName() + "," + getUmsatz() + ")";
+    }
 }

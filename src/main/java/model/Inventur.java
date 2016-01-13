@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Entity
 public class Inventur {
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private IntegerProperty id;
     private ObjectProperty<LocalDate> datum;
     private ObservableList<Produktmenge> produkte;
@@ -61,5 +63,10 @@ public class Inventur {
 
     public void setProdukte(Collection<Produktmenge> produkte) {
         this.produkte = FXCollections.observableArrayList(produkte);
+    }
+
+    @Override
+    public String toString() {
+        return "Inventur (" + getDatum().format(dtf) + ")";
     }
 }
