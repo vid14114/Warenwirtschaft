@@ -5,6 +5,7 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+sudo: false
 addons:
   apt:
     packages:
