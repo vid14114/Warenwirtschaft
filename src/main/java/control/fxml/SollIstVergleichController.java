@@ -3,6 +3,7 @@ package control.fxml;
 import control.AuftragSession;
 import control.InventurSession;
 import control.ZulieferungSession;
+import control.fxml.dataStructures.SollIstVergleichRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,29 +28,29 @@ public class SollIstVergleichController {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Callback imageCellFactory = new ImageCellFactory();
     private final List<Inventur> inventuren = InventurSession.getAllInventuren();
-    private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
-    private final ObservableList<CalculatedInfo> data = FXCollections.observableArrayList();
+    private final Map<Integer, SollIstVergleichRow> produktInfos = new TreeMap<>();
+    private final ObservableList<SollIstVergleichRow> data = FXCollections.observableArrayList();
     @FXML
     private ChoiceBox<String> vonChoiceBox;
     @FXML
     private ChoiceBox<String> bisChoiceBox;
 
     @FXML
-    private TableView<CalculatedInfo> invInfoTable;
+    private TableView<SollIstVergleichRow> invInfoTable;
     @FXML
-    private TableColumn<CalculatedInfo, Number> produktNrColumn;
+    private TableColumn<SollIstVergleichRow, Number> produktNrColumn;
     @FXML
-    private TableColumn<CalculatedInfo, String> bezeichnungColumn;
+    private TableColumn<SollIstVergleichRow, String> bezeichnungColumn;
     @FXML
-    private TableColumn<CalculatedInfo, Image> bildColumn;
+    private TableColumn<SollIstVergleichRow, Image> bildColumn;
     @FXML
-    private TableColumn<CalculatedInfo, Number> sollColumn;
+    private TableColumn<SollIstVergleichRow, Number> sollColumn;
     @FXML
-    private TableColumn<CalculatedInfo, Number> istColumn;
+    private TableColumn<SollIstVergleichRow, Number> istColumn;
     @FXML
-    private TableColumn<CalculatedInfo, String> letzteInvColumn;
+    private TableColumn<SollIstVergleichRow, String> letzteInvColumn;
     @FXML
-    private TableColumn<CalculatedInfo, String> statusColumn;
+    private TableColumn<SollIstVergleichRow, String> statusColumn;
 
     @FXML
     private void initialize() {
@@ -101,13 +102,14 @@ public class SollIstVergleichController {
             for (Produktmenge p : i.getProdukte()) {
                 int key = p.getProdukt().getProduktNr();
                 if (!produktInfos.containsKey(key)) {
-                    CalculatedInfo ci = new CalculatedInfo(key);
+                    SollIstVergleichRow ci = new SollIstVergleichRow();
+                    ci.produktNr.set(key);
                     ci.bezeichnung.set(p.getProdukt().getKateogrie().name() + ": " + p.getProdukt().getBez());
                     ci.bild = p.getProdukt().getImageProperty();
                     ci.sollStand.set(p.getMenge());
                     produktInfos.put(key, ci);
                 }
-                CalculatedInfo ci = produktInfos.get(key);
+                SollIstVergleichRow ci = produktInfos.get(key);
                 if (i.getDatum().isAfter(ci.lastInventur)) {
                     ci.lastInventur = i.getDatum();
                     ci.inLastInvetur = p.getMenge();
@@ -119,7 +121,7 @@ public class SollIstVergleichController {
             }
         }
 
-        Collection<CalculatedInfo> toRemove = new ArrayList<>();
+        Collection<SollIstVergleichRow> toRemove = new ArrayList<>();
         produktInfos.values().stream().filter(ci -> ci.preLastInventur.isEqual(LocalDate.MIN)).forEach(toRemove::add);
         toRemove.stream().forEach(produktInfos.values()::remove);
 
@@ -127,7 +129,7 @@ public class SollIstVergleichController {
             for (Produktmenge p : a.getProdukte()) {
                 int key = p.getProdukt().getProduktNr();
                 if (produktInfos.containsKey(key)) {
-                    CalculatedInfo ci = produktInfos.get(key);
+                    SollIstVergleichRow ci = produktInfos.get(key);
                     ci.sollStand.set(ci.sollStand.get() - p.getMenge());
                 }
             }
@@ -137,14 +139,14 @@ public class SollIstVergleichController {
             for (Produktmenge p : z.getProdukte()) {
                 int key = p.getProdukt().getProduktNr();
                 if (produktInfos.containsKey(key)) {
-                    CalculatedInfo ci = produktInfos.get(key);
+                    SollIstVergleichRow ci = produktInfos.get(key);
                     ci.sollStand.set(ci.sollStand.get() + p.getMenge());
                 }
             }
         }
 
         data.clear();
-        for (CalculatedInfo ci : produktInfos.values()) {
+        for (SollIstVergleichRow ci : produktInfos.values()) {
             ci.istStand.set(ci.inLastInvetur);
             ci.lastInvProp.set(ci.lastInventur.format(dtf));
             if (ci.sollStand.get() == ci.inLastInvetur)

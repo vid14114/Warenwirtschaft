@@ -17,7 +17,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
     /**
      * Convenience converter that does nothing (converts Strings to themselves and vice-versa...).
      */
-    public static final StringConverter<String> IDENTITY_CONVERTER = new StringConverter<String>() {
+    private static final StringConverter<String> IDENTITY_CONVERTER = new StringConverter<String>() {
 
         @Override
         public String toString(String object) {
@@ -35,11 +35,11 @@ public class EditCell<S, T> extends TableCell<S, T> {
     // Converter for converting the text in the text field to the user type, and vice-versa:
     private final StringConverter<T> converter;
 
-    public EditCell(StringConverter<T> converter) {
+    private EditCell(StringConverter<T> converter) {
         this.converter = converter;
 
         itemProperty().addListener((obx, oldItem, newItem) -> {
-            if (newItem == null) {
+            if (newItem == null || newItem.equals("0")) {
                 setText(null);
             } else {
                 setText(converter.toString(newItem));

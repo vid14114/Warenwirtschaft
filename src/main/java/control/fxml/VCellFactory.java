@@ -1,5 +1,6 @@
 package control.fxml;
 
+import control.fxml.dataStructures.AizRow;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.paint.Color;
@@ -8,13 +9,13 @@ import javafx.util.Callback;
 /**
  * Created by Viktor on 09.06.2015.
  */
-public class VCellFactory implements Callback<TableColumn<Eintrag, String>, TableCell<Eintrag, String>> {
+class VCellFactory implements Callback<TableColumn<AizRow, String>, TableCell<AizRow, String>> {
     @Override
-    public TableCell<Eintrag, String> call(TableColumn<Eintrag, String> param) {
+    public TableCell<AizRow, String> call(TableColumn<AizRow, String> param) {
         return new EintragStringTableCell();
     }
 
-    private static class EintragStringTableCell extends TableCell<Eintrag, String> {
+    private static class EintragStringTableCell extends TableCell<AizRow, String> {
 
         @Override
         public void updateItem(final String item, boolean empty) {
@@ -22,7 +23,6 @@ public class VCellFactory implements Callback<TableColumn<Eintrag, String>, Tabl
                 setStyle("-fx-background-color: aliceblue");
                 setTextFill(Color.BLACK);
                 setText(item);
-                //setStyle("-fx-prompt-text-fill: black");
             } else
                 setStyle("-fx-background-color: white");
         }

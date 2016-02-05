@@ -10,7 +10,7 @@
         <ChoiceBox fx:id="kundeField" layoutX="70.0" layoutY="10.0" prefHeight="25.0" prefWidth="432.0"/>
         <TextField fx:id="datumField" layoutX="588.0" layoutY="10.0"/>
         <Label layoutX="747.0" layoutY="14.0" text=":Datum"/>
-        <TableView fx:id="auftragDetailsTable" layoutX="14.0" layoutY="57.0" prefHeight="490.0" prefWidth="770.0">
+        <TableView fx:id="aizTable" layoutX="14.0" layoutY="57.0" prefHeight="490.0" prefWidth="770.0">
             <columns>
                 <TableColumn fx:id="produktNrColumn" prefWidth="129.0" text="ProduktNr"/>
                 <TableColumn fx:id="mengeColumn" prefWidth="128.0" text="Menge"/>

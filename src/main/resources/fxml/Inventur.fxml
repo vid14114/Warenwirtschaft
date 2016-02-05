@@ -9,7 +9,7 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
         <Label layoutX="745.0" layoutY="14.0" text=":Datum"/>
         <TextField fx:id="datumField" layoutX="586.0" layoutY="10.0"/>
-        <TableView fx:id="inventurDetailsTable" layoutX="14.0" layoutY="35.0" prefHeight="490.0" prefWidth="770.0">
+        <TableView fx:id="aizTable" layoutX="14.0" layoutY="35.0" prefHeight="490.0" prefWidth="770.0">
             <columns>
                 <TableColumn fx:id="produktNrColumn" prefWidth="129.0" text="ProduktNr"/>
                 <TableColumn fx:id="mengeColumn" prefWidth="128.0" text="Menge"/>

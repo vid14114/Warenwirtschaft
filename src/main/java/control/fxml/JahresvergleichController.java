@@ -3,6 +3,7 @@ package control.fxml;
 import control.AuftragSession;
 import control.KundeSession;
 import control.ProduktSession;
+import control.fxml.dataStructures.JahresvergleichRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,11 +27,10 @@ import java.util.*;
  */
 public class JahresvergleichController {
 
-    private final Map<Integer, CalculatedInfo> produktInfos = new TreeMap<>();
+    private final Map<Integer, JahresvergleichRow> produktInfos = new TreeMap<>();
     private final Callback imageCellFactory = new ImageCellFactory();
-    private final ObservableList<CalculatedInfo> dataShow = FXCollections.observableArrayList();
+    private final ObservableList<JahresvergleichRow> dataShow = FXCollections.observableArrayList();
     private final LocalDate now = LocalDate.now();
-    private List<CalculatedInfo> dataAll;
     @FXML
     private ChoiceBox<String> kundenChoiceBox;
 
@@ -44,21 +44,21 @@ public class JahresvergleichController {
     private ChoiceBox<Number> year2ChoiceBox;
 
     @FXML
-    private TableView<CalculatedInfo> pInfoTable;
+    private TableView<JahresvergleichRow> pInfoTable;
     @FXML
-    private TableColumn<CalculatedInfo, Number> pNrColumn;
+    private TableColumn<JahresvergleichRow, Number> pNrColumn;
     @FXML
-    private TableColumn<CalculatedInfo, String> bezColumn;
+    private TableColumn<JahresvergleichRow, String> bezColumn;
     @FXML
-    private TableColumn<CalculatedInfo, Image> bildColumn;
+    private TableColumn<JahresvergleichRow, Image> bildColumn;
     @FXML
-    private TableColumn<CalculatedInfo, Number> s1Column;
+    private TableColumn<JahresvergleichRow, Number> s1Column;
     @FXML
-    private TableColumn<CalculatedInfo, Number> u1Column;
+    private TableColumn<JahresvergleichRow, Number> u1Column;
     @FXML
-    private TableColumn<CalculatedInfo, Number> s2Column;
+    private TableColumn<JahresvergleichRow, Number> s2Column;
     @FXML
-    private TableColumn<CalculatedInfo, Number> u2Column;
+    private TableColumn<JahresvergleichRow, Number> u2Column;
 
     @FXML
     private void initialize() {
@@ -130,7 +130,7 @@ public class JahresvergleichController {
         zeitraumIntoInfos(auftraegeInZeitraum1);
         zeitraumIntoInfos(auftraegeInZeitraum2);
 
-        for (CalculatedInfo ci : produktInfos.values()) {
+        for (JahresvergleichRow ci : produktInfos.values()) {
             Produkt p = ProduktSession.getProdukt(ci.produktNr.get());
             ci.umsatz1.set(Math.round(ci.stuckzahl1.get() * p.getVkPreis() * 100.0) / 100.0);
             ci.umsatz2.set(Math.round(ci.stuckzahl2.get() * p.getVkPreis() * 100.0) / 100.0);
@@ -143,12 +143,13 @@ public class JahresvergleichController {
             for (Produktmenge pm : a.getProdukte()) {
                 int key = pm.getProdukt().getProduktNr();
                 if (!produktInfos.containsKey(key)) {
-                    CalculatedInfo ci = new CalculatedInfo(key);
+                    JahresvergleichRow ci = new JahresvergleichRow();
+                    ci.produktNr.set(key);
                     ci.bezeichnung.set(pm.getProdukt().getKateogrie().name() + ": " + pm.getProdukt().getBez());
                     ci.bild = pm.getProdukt().getImageProperty();
                     produktInfos.put(key, ci);
                 }
-                CalculatedInfo ci = produktInfos.get(key);
+                JahresvergleichRow ci = produktInfos.get(key);
                 ci.stuckzahl1.set(ci.stuckzahl1.get() + pm.getMenge());
             }
         }

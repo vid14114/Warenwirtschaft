@@ -62,9 +62,9 @@ public class MainApp extends Application {
         controller.setMainApp(this);
 
         /*BestellempfehlungController b = new BestellempfehlungController();
-        Map<Integer, CalculatedInfo> data = b.calculateForAlarm();
+        Map<Integer, BestellempfehlungRow> data = b.calculateForAlarm();
         String msg = "";
-        for (CalculatedInfo ci : data.values()) {
+        for (BestellempfehlungRow ci : data.values()) {
             if (Integer.valueOf(ci.tageBisLeer.get()) < 365) {
                 msg += ci.produktNr.get() + ": " + ci.tageBisLeer.get() + " Tage\n";
             }
