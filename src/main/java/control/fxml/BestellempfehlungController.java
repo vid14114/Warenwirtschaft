@@ -128,6 +128,10 @@ public class BestellempfehlungController {
         List<Auftrag> auftraege = AuftragSession.getAllAuftraege();
         LocalDate fromLast = from.minusYears(1);
         LocalDate toLast = to.minusYears(1);
+        int modificator = 1;
+        if (toLast.isAfter(LocalDate.now())) {
+            modificator = from.until(to).getYears();
+        }
         List<Auftrag> auftraegeInZeitraum = new ArrayList<>();
         auftraege.stream().filter(a -> a.getErstellung().isAfter(fromLast) && a.getErstellung().isBefore(toLast)).forEach(auftraegeInZeitraum::add);
         Map<Integer, Integer> data = new HashMap<>();
@@ -135,9 +139,9 @@ public class BestellempfehlungController {
             for (Produktmenge p : a.getProdukte()) {
                 int key = p.getProdukt().getProduktNr();
                 if (!data.containsKey(key)) {
-                    data.put(key, p.getMenge());
+                    data.put(key, p.getMenge() * modificator);
                 } else {
-                    data.put(key, data.get(key) + p.getMenge());
+                    data.put(key, data.get(key) + (p.getMenge() * modificator));
                 }
             }
         }

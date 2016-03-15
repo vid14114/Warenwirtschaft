@@ -55,6 +55,7 @@
                             text="Details"/>
                     <Button layoutX="352.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleJahresvergleich"
                             text="Jahresvergleich"/>
+                    <Button layoutX="649.0" layoutY="15.0" mnemonicParsing="false" onAction="#export" text="Export"/>
                 </AnchorPane>
             </SplitPane>
         </Tab>

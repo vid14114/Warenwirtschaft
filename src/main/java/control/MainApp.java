@@ -12,6 +12,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -76,6 +77,12 @@ public class MainApp extends Application {
             alert.setContentText(msg);
             alert.showAndWait();
         }*/
+    }
+
+    public String getPath() {
+        File f = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String s = f.getParent();
+        return s;
     }
 
     public boolean showNewKundeDialog() {

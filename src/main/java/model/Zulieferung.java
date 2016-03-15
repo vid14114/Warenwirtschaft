@@ -24,7 +24,7 @@ public class Zulieferung {
     private ObservableList<Produktmenge> produkte;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int getZuNr() {
         if (zuNr == null)
             return 0;

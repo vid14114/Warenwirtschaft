@@ -14,6 +14,7 @@ import model.*;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -480,5 +481,13 @@ public class KundenOverviewController {
     @FXML
     private void handleSollIstVergleich() {
         mainApp.showSollIstVergleich();
+    }
+
+    @FXML
+    private void export() {
+        LocalDateTime ldt = LocalDateTime.now();
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String filename = "export" + ldt.format(dtf1) + ".sql";
+        ExportSession.exportDatabase(mainApp.getPath() + filename);
     }
 }
