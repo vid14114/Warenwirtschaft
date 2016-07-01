@@ -1,19 +1,15 @@
 package control.fxml.dataStructures;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.time.LocalDate;
 
-/**
- * Created by Viktor on 02.02.2016.
- */
 public class BestellempfehlungRow extends TableRow {
     public final StringProperty kategorie = new SimpleStringProperty("");
     public final StringProperty vorratswochenProperty = new SimpleStringProperty("");
-    public final StringProperty lagerstand = new SimpleStringProperty("");
-    public final StringProperty tageBisLeer = new SimpleStringProperty("");
-    public final StringProperty bestellmenge = new SimpleStringProperty("");
+    public final LongProperty lagerstand = new SimpleLongProperty();
+    public final IntegerProperty tageBisLeer = new SimpleIntegerProperty();
+    public final LongProperty bestellmenge = new SimpleLongProperty();
     public final StringProperty bestelldatum = new SimpleStringProperty("");
 
     public int soldTotal;

@@ -46,17 +46,19 @@ public class BestellempfehlungController {
     @FXML
     private TableColumn<BestellempfehlungRow, String> vorratswochenColumn;
     @FXML
-    private TableColumn<BestellempfehlungRow, String> lagerstandColumn;
+    private TableColumn<BestellempfehlungRow, Number> lagerstandColumn;
     @FXML
-    private TableColumn<BestellempfehlungRow, String> daysToEmptyColumn;
+    private TableColumn<BestellempfehlungRow, Number> daysToEmptyColumn;
     @FXML
-    private TableColumn<BestellempfehlungRow, String> mengeColumn;
+    private TableColumn<BestellempfehlungRow, Number> mengeColumn;
     @FXML
     private TableColumn<BestellempfehlungRow, String> bestellenColumn;
     @FXML
     private RadioButton durchschnitt;
     @FXML
     private RadioButton vorjahr;
+    @FXML
+    private TextField vorratswochenTextField;
     @FXML
     private TextField filterField;
 
@@ -109,6 +111,18 @@ public class BestellempfehlungController {
             filterProducts(newValue);
         });
 
+        vorratswochenTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            changeVorratswochen(Integer.valueOf(newValue));
+        }));
+
+        recalculate(getBerechnungsmethode());
+    }
+
+    private void changeVorratswochen(int vorratswochen) {
+        dataAll.stream().forEach(b -> {
+            b.vorratswochen = vorratswochen;
+            b.vorratswochenProperty.set("" + b.vorratswochen);
+        });
         recalculate(getBerechnungsmethode());
     }
 
@@ -197,10 +211,10 @@ public class BestellempfehlungController {
                 long days = ChronoUnit.DAYS.between(ci.firstSold, LocalDate.now());
                 ci.dailyNeed = (double) ci.soldTotal / (double) days;
                 long actualStock = ci.inLastInventur - ci.soldAfterLastInventur - Math.round(vorlaufzeit * ci.dailyNeed);
-                ci.lagerstand.set("" + actualStock);
+                ci.lagerstand.set(actualStock);
                 if (days != 0) {
                     int daysToEmpty = (int) (actualStock / ci.dailyNeed);
-                    ci.tageBisLeer.set(String.valueOf(daysToEmpty));
+                    ci.tageBisLeer.set(daysToEmpty);
                 } else
                     toRemove.add(ci);
             } else
@@ -249,7 +263,7 @@ public class BestellempfehlungController {
             } else {
                 menge = Math.round(ci.dailyNeed * ci.vorratswochen * 7 - (ci.inLastInventur - ci.soldAfterLastInventur)); //jahre: 365, wochen: 7
             }
-            ci.bestellmenge.set("" + Math.max(menge, 0));
+            ci.bestellmenge.set(Math.max(menge, 0));
         }
         FXCollections.sort(dataShow, (o1, o2) -> {
             int menge1 = Integer.valueOf(o1.tageBisLeer.get());

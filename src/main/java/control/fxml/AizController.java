@@ -25,7 +25,7 @@ public class AizController {
     final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     final Callback vCellFactory = new VCellFactory();
     final ObservableList<AizRow> data = FXCollections.observableArrayList();
-    private final Callback imageCellFactory = new ImageCellFactory();
+    final Callback imageCellFactory = new ImageCellFactory();
     Stage dialogStage;
     boolean saveClicked;
 
@@ -37,7 +37,6 @@ public class AizController {
     @FXML
     TableColumn<AizRow, String> mengeColumn;
     @FXML
-    private
     TableColumn<AizRow, String> produktNrColumn;
     @FXML
     private

@@ -2,38 +2,55 @@ package control.fxml;
 
 import control.AuftragSession;
 import control.KundeSession;
+import control.LieferantSession;
 import control.ProduktSession;
 import control.fxml.dataStructures.AizRow;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import model.Auftrag;
-import model.Kunde;
-import model.Produkt;
-import model.Produktmenge;
+import javafx.scene.image.Image;
+import model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Viktor on 28.05.2015.
  */
 public class AuftragDetailsController extends AizController {
 
+    private final List<Lieferant> lieferanten = LieferantSession.getAllLieferanten();
+    @FXML
+    ChoiceBox<String> lieferantenChoiceBox;
     private List<String> kList;
     private Auftrag toEdit;
-
+    private List<Produkt> produkte;
     @FXML
     private ChoiceBox<String> kundeField;
-
     @FXML
     private TableColumn<AizRow, String> preisColumn;
     @FXML
     private TextField totalPriceField;
+    @FXML
+    private TableView<Produkt> produkteTable;
+    @FXML
+    private TableColumn<Produkt, Number> suchePNrColumn;
+    @FXML
+    private TableColumn<Produkt, String> sucheBezColumn;
+    @FXML
+    private TableColumn<Produkt, Image> sucheBildColumn;
+    @FXML
+    private TableColumn<Produkt, Number> sucheVkPreisColumn;
+    @FXML
+    private TextField filterField;
 
     @FXML
     private void initialize() {
@@ -56,6 +73,28 @@ public class AuftragDetailsController extends AizController {
         if (toEdit == null)
             for (int i = 0; i < 8; i++)
                 handleNewRow();
+
+        suchePNrColumn.setCellValueFactory(cellData -> cellData.getValue().getProduktNrProperty());
+        sucheBezColumn.setCellValueFactory(cellData -> cellData.getValue().getBezProperty());
+        sucheBildColumn.setCellValueFactory(cellData -> cellData.getValue().getImageProperty());
+        sucheBildColumn.setCellFactory(imageCellFactory);
+        sucheVkPreisColumn.setCellValueFactory(cellData -> cellData.getValue().getVkPreisProperty());
+
+        produkte = ProduktSession.getAllProdukte();
+        produkteTable.setItems(FXCollections.observableArrayList(produkte));
+
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterProducts();
+        });
+
+        ObservableList<String> lieferantenChoice = FXCollections.observableArrayList();
+        lieferantenChoice.add("Alle");
+        lieferanten.stream().forEach(l -> lieferantenChoice.add(l.getName()));
+        lieferantenChoiceBox.setItems(lieferantenChoice);
+        lieferantenChoiceBox.setValue("Alle");
+        lieferantenChoiceBox.valueProperty().addListener((observable -> {
+            filterProducts();
+        }));
     }
 
     public void populateData(Iterable<Produktmenge> la, Auftrag a) {
@@ -124,4 +163,39 @@ public class AuftragDetailsController extends AizController {
         totalPriceField.setText("\u20ac " + total);
     }
 
+    @FXML
+    private void handleTransfer() {
+        int selectedIndex = produkteTable.getSelectionModel().getSelectedIndex();
+        Produkt p = produkteTable.getItems().get(selectedIndex);
+        for (int i = 0; i < aizTable.getItems().size(); i++) {
+            AizRow ar = aizTable.getItems().get(i);
+            if (ar.produktNr.get() == 0) {
+                ar.produktNr.set(p.getProduktNr());
+                checkNumbers();
+                if (i + 1 == aizTable.getItems().size())
+                    handleNewRow();
+                aizTable.getColumns().get(0).setVisible(false);
+                aizTable.getColumns().get(0).setVisible(true);
+                break;
+            }
+        }
+    }
+
+    public void filterProducts() {
+        String s = filterField.getText();
+        String lieferant = lieferantenChoiceBox.getValue();
+        List<Produkt> filter1 = produkte;
+        if (!lieferant.equals("Alle")) {
+            Collection<Produkt> produkte = LieferantSession.getLieferantByName(lieferant).getProdukte();
+            List<Integer> produktNummern = new LinkedList<>();
+            produkte.stream().forEach(p -> produktNummern.add(p.getProduktNr()));
+            filter1 = produkte.stream().filter(ci -> produktNummern.contains(ci.getProduktNr())).collect(Collectors.toList());
+        }
+
+        if (s.length() > 0) {
+            List<Produkt> filteredProducts = filter1.stream().filter(p -> p.getBez().contains(s) || ("" + p.getProduktNr()).contains(s)).collect(Collectors.toList());
+            produkteTable.setItems(FXCollections.observableArrayList(filteredProducts));
+        } else
+            produkteTable.setItems(FXCollections.observableArrayList(filter1));
+    }
 }
