@@ -10,7 +10,7 @@ public class BestellempfehlungRow extends TableRow {
     public final LongProperty lagerstand = new SimpleLongProperty();
     public final IntegerProperty tageBisLeer = new SimpleIntegerProperty();
     public final LongProperty bestellmenge = new SimpleLongProperty();
-    public final StringProperty bestelldatum = new SimpleStringProperty("");
+    public final ObjectProperty<LocalDate> bestelldatum = new SimpleObjectProperty<>();
 
     public int soldTotal;
     public int soldAfterLastInventur;

@@ -182,7 +182,7 @@ public class AuftragDetailsController extends AizController {
     }
 
     public void filterProducts() {
-        String s = filterField.getText();
+        String s = filterField.getText().toLowerCase();
         String lieferant = lieferantenChoiceBox.getValue();
         List<Produkt> filter1 = produkte;
         if (!lieferant.equals("Alle")) {
@@ -193,7 +193,7 @@ public class AuftragDetailsController extends AizController {
         }
 
         if (s.length() > 0) {
-            List<Produkt> filteredProducts = filter1.stream().filter(p -> p.getBez().contains(s) || ("" + p.getProduktNr()).contains(s)).collect(Collectors.toList());
+            List<Produkt> filteredProducts = filter1.stream().filter(p -> p.getBez().toLowerCase().contains(s) || ("" + p.getProduktNr()).contains(s) || p.getKateogrie().name().toLowerCase().contains(s)).collect(Collectors.toList());
             produkteTable.setItems(FXCollections.observableArrayList(filteredProducts));
         } else
             produkteTable.setItems(FXCollections.observableArrayList(filter1));

@@ -250,9 +250,10 @@ public class KundenOverviewController {
         });
     }
 
-    public void filterProducts(String s) {
+    public void filterProducts(String filterText) {
+        String s = filterText.toLowerCase();
         if (s.length() > 0) {
-            List<Produkt> filteredProducts = produkte.stream().filter(p -> p.getBez().contains(s) || ("" + p.getProduktNr()).contains(s)).collect(Collectors.toList());
+            List<Produkt> filteredProducts = produkte.stream().filter(p -> p.getBez().toLowerCase().contains(s) || ("" + p.getProduktNr()).contains(s) || p.getKateogrie().name().toLowerCase().contains(s)).collect(Collectors.toList());
             produkteTable.setItems(FXCollections.observableArrayList(filteredProducts));
         } else
             produkteTable.setItems(FXCollections.observableArrayList(produkte));

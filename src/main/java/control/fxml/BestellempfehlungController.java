@@ -52,7 +52,7 @@ public class BestellempfehlungController {
     @FXML
     private TableColumn<BestellempfehlungRow, Number> mengeColumn;
     @FXML
-    private TableColumn<BestellempfehlungRow, String> bestellenColumn;
+    private TableColumn<BestellempfehlungRow, LocalDate> bestellenColumn;
     @FXML
     private RadioButton durchschnitt;
     @FXML
@@ -126,9 +126,10 @@ public class BestellempfehlungController {
         recalculate(getBerechnungsmethode());
     }
 
-    private void filterProducts(String s) {
+    private void filterProducts(String filterText) {
+        String s = filterText.toLowerCase();
         if (s.length() > 0) {
-            List<BestellempfehlungRow> filteredProducts = dataShow.stream().filter(p -> p.bezeichnung.get().contains(s) || ("" + p.produktNr.get()).contains(s)).collect(Collectors.toList());
+            List<BestellempfehlungRow> filteredProducts = dataShow.stream().filter(p -> p.bezeichnung.get().toLowerCase().contains(s) || ("" + p.produktNr.get()).contains(s) || p.kategorie.get().toLowerCase().contains(s)).collect(Collectors.toList());
             pInfoTable.setItems(FXCollections.observableArrayList(filteredProducts));
         } else
             pInfoTable.setItems(dataShow);
@@ -231,11 +232,11 @@ public class BestellempfehlungController {
                 if (produktInfos.containsKey(key)) {
                     BestellempfehlungRow ci = produktInfos.get(key);
                     LocalDate now = LocalDate.now();
-                    LocalDate bestellen = now.plusDays(Integer.valueOf(ci.tageBisLeer.get()) - ci.lieferzeit);
+                    LocalDate bestellen = now.plusDays(ci.tageBisLeer.get() - ci.lieferzeit);
                     if (bestellen.isBefore(now) || bestellen.isEqual(now))
-                        ci.bestelldatum.set("SOFORT!");
+                        ci.bestelldatum.set(LocalDate.now());
                     else
-                        ci.bestelldatum.set(bestellen.format(dtf));
+                        ci.bestelldatum.set(bestellen);
                 }
             }
         }
@@ -266,8 +267,8 @@ public class BestellempfehlungController {
             ci.bestellmenge.set(Math.max(menge, 0));
         }
         FXCollections.sort(dataShow, (o1, o2) -> {
-            int menge1 = Integer.valueOf(o1.tageBisLeer.get());
-            int menge2 = Integer.valueOf(o2.tageBisLeer.get());
+            int menge1 = o1.tageBisLeer.get();
+            int menge2 = o2.tageBisLeer.get();
             return menge1 - menge2;
         });
         pInfoTable.refresh();
