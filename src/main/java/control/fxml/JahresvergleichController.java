@@ -127,8 +127,8 @@ public class JahresvergleichController {
             auftraegeInZeitraum2 = aKunde2;
         }
 
-        zeitraumIntoInfos(auftraegeInZeitraum1);
-        zeitraumIntoInfos(auftraegeInZeitraum2);
+        zeitraumIntoInfos(auftraegeInZeitraum1, 1);
+        zeitraumIntoInfos(auftraegeInZeitraum2, 2);
 
         for (JahresvergleichRow ci : produktInfos.values()) {
             Produkt p = ProduktSession.getProdukt(ci.produktNr.get());
@@ -138,7 +138,7 @@ public class JahresvergleichController {
         }
     }
 
-    private void zeitraumIntoInfos(List<Auftrag> zeitraum) {
+    private void zeitraumIntoInfos(List<Auftrag> zeitraum, int column) {
         for (Auftrag a : zeitraum) {
             for (Produktmenge pm : a.getProdukte()) {
                 int key = pm.getProdukt().getProduktNr();
@@ -150,7 +150,10 @@ public class JahresvergleichController {
                     produktInfos.put(key, ci);
                 }
                 JahresvergleichRow ci = produktInfos.get(key);
-                ci.stuckzahl1.set(ci.stuckzahl1.get() + pm.getMenge());
+                if (column == 1)
+                    ci.stuckzahl1.set(ci.stuckzahl1.get() + pm.getMenge());
+                if (column == 2)
+                    ci.stuckzahl2.set(ci.stuckzahl2.get() + pm.getMenge());
             }
         }
     }
